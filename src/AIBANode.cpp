@@ -1,5 +1,9 @@
 #include "AIBANode.hpp"
 
+AIBANode::AIBANode(unsigned char coord) {
+    this->coord = coord;
+}
+
 void AIBANode::Cycle() {
     return;
 }

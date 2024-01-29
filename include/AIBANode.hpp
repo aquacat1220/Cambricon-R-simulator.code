@@ -9,7 +9,7 @@ using namespace std;
 
 class AIBANode {
     public:
-    AIBANode();
+    AIBANode(unsigned char coord);
 
     public:
     // Inputs
