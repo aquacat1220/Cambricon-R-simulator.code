@@ -44,7 +44,7 @@ class AIBANode {
     private:
     vector<Request> local_request_buffer;
     vector<PSum> psum_buffer;
-    vector<int> sram_bank;
+    vector<HashEntry> sram_bank;
     // Coordinate in NoC of AIBA nodes. Range between 0 ~ 255.
     unsigned char coord;
 };
