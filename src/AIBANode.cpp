@@ -10,8 +10,10 @@ void AIBANode::Cycle(void) {
 
     //Requests
     //addr comparison -> LRB or NRB
-    //while(in_left_reqs.)
-    //if(in_left_reqs[0].addr)
+    while(!in_left_reqs.empty()){
+        if(in_left_reqs[0].addr)
+    }
+        
         //case1. LRB
             //
 
