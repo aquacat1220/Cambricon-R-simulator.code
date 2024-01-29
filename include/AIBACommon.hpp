@@ -1,10 +1,18 @@
 #ifndef AIBA_COMMON
 #define AIBA_COMMON
 
+/**
+ * @brief Struct representing sample point in 3D space.
+ * 
+ */
 struct Point {
     float x, y, z;
 };
 
+/**
+ * @brief Struct representing hash entry read request.
+ * 
+ */
 struct Request {
     // Request Index
     unsigned char ridx;
@@ -18,6 +26,10 @@ struct Request {
     unsigned char dest;
 };
 
+/**
+ * @brief Struct representing read hash entry data.
+ * 
+ */
 struct Packet {
     // Request Index
     unsigned char ridx;
@@ -29,6 +41,10 @@ struct Packet {
     unsigned char dest;
 };
 
+/**
+ * @brief Struct representing accumulating partial sum.
+ * 
+ */
 struct PSum {
     // Request Index
     unsigned char ridx;
@@ -40,12 +56,16 @@ struct PSum {
     unsigned int cnt;
 };
 
+/**
+ * @brief Struct representing final interpolated feature.
+ * 
+ */
 struct Sum {
     // Request Index
     unsigned char ridx;
     // Point Index
     unsigned char pidx;
-    // Accumulated partial sum
+    // Accumulated sum
     float sum;
 };
 
