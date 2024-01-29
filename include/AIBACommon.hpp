@@ -14,7 +14,10 @@ struct Point {
  * Maybe it should be array of half precision floats...
  * 
  */
-typedef float HashEntry[2];
+struct HashEntry {
+    float elem0;
+    float elem1;
+};
 
 /**
  * @brief Struct representing hash entry read request.

@@ -33,7 +33,7 @@ void AIBANode::Cycle(void) {
     return;
 }
 
-void AIBANode::HashTableLoad(int* hash_table) {
+void AIBANode::HashTableLoad(HashEntry* hash_table) {
     sram_bank.assign(hash_table, hash_table + (1 << 11));
     return;
 }

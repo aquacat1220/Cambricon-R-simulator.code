@@ -36,10 +36,10 @@ class AIBANode {
     /**
      * @brief Loads the hash table into sram_bank.
      * 
-     * @param hash_table Pointer to start of hash table as a int array.
+     * @param hash_table Pointer to start of hash table as an array of HashEntry.
      * Array should be of length 2**11 (2**13 bytes).
      */
-    void HashTableLoad(int* hash_table);
+    void HashTableLoad(HashEntry* hash_table);
 
     private:
     vector<Request> local_request_buffer;
