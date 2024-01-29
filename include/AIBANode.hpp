@@ -47,6 +47,13 @@ class AIBANode {
     vector<HashEntry> sram_bank;
     // Coordinate in NoC of AIBA nodes. Range between 0 ~ 255.
     unsigned char coord;
+
+    private:
+    /**
+     * @brief Clears all outputs.
+     * 
+     */
+    void ClearOutputs();
 };
 
 #endif

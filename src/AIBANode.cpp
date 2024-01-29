@@ -5,6 +5,9 @@ AIBANode::AIBANode(unsigned char coord) {
 }
 
 void AIBANode::Cycle(void) {
+    // Clear all outputs before generatign new ones.
+    this->ClearOutputs();
+
     //Requests
     //addr comparison -> LRB or NRB
     //while(in_left_reqs.)
@@ -33,4 +36,13 @@ void AIBANode::Cycle(void) {
 void AIBANode::HashTableLoad(int* hash_table) {
     sram_bank.assign(hash_table, hash_table + (1 << 11));
     return;
+}
+
+void AIBANode::ClearOutputs() {
+    out_right_reqs.clear();
+    out_up_pkts.clear();
+    out_down_pkts.clear();
+    out_left_pkts.clear();
+    out_right_pkts.clear();
+    out_down_sums.clear();
 }
