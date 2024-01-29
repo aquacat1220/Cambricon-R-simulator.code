@@ -46,9 +46,31 @@ void AIBANode::Cycle(void) {
             //Psum computing
             //Psum counter check (==7)
 
-    //Sum
-    //transfer to bottom node
+    // Transfer input sums from up node to down node.
+    out_down_sums.insert(out_down_sums.end(), in_up_sums.begin(), in_up_sums.end());
 
+    // Iterate over arrive packets and accumulate into psum_buffer.
+    for (const Packet &pkt : arrival_buffer) {
+        // First check for preexisting matching psums.
+        for (PSum &psum : psum_buffer) {
+            if ((pkt.ridx == psum.ridx) && (pkt.pidx == psum.pidx)) {
+                // If matching psum exists, accumulate packet.
+                psum.psum.elem0 += pkt.data.elem0;
+                psum.psum.elem1 += pkt.data.elem1;
+                psum.cnt++;
+
+                // And if psum is full, convert it to a Sum and send it out.
+                if (psum.cnt == 8) {
+                    out_down_sums.emplace_back(psum.ridx, psum.pidx, psum.psum);
+                }
+
+                break;
+            }
+        }
+
+        // If there are no matching psums, add a new one to the buffer!
+        psum_buffer.emplace_back(pkt.ridx, pkt.pidx, pkt.data, 1);
+    }
 
     return;
 }
