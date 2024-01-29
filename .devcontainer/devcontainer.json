@@ -26,7 +26,7 @@
 	// Start with C++ extension pack!
 	"customizations": {
 		"vscode": {
-			"extensions": ["ms-vscode.cpptools-extension-pack"]
+			"extensions": ["ms-vscode.cpptools-extension-pack", "cschlosser.doxdocgen"]
 		}
 	}
 }
