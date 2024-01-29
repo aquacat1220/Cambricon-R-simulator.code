@@ -9,5 +9,6 @@ void AIBANode::Cycle() {
 }
 
 void AIBANode::HashTableLoad(int* hash_table) {
+    sram_bank.assign(hash_table, hash_table + (1 << 11));
     return;
 }
