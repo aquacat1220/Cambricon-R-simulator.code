@@ -10,6 +10,13 @@ struct Point {
 };
 
 /**
+ * @brief Representing entry in the hash table.
+ * Maybe it should be array of half precision floats...
+ * 
+ */
+typedef float HashEntry[2];
+
+/**
  * @brief Struct representing hash entry read request.
  * 
  */
@@ -36,7 +43,7 @@ struct Packet {
     // Point Index
     unsigned char pidx;
     // Interpolated data
-    float data;
+    HashEntry data;
     // Destination node for accumulation
     unsigned char dest;
 };
@@ -51,7 +58,7 @@ struct PSum {
     // Point Index
     unsigned char pidx;
     // Accumulated partial sum
-    float psum;
+    HashEntry psum;
     // Count of accumulated vertices
     unsigned int cnt;
 };
@@ -66,7 +73,7 @@ struct Sum {
     // Point Index
     unsigned char pidx;
     // Accumulated sum
-    float sum;
+    HashEntry sum;
 };
 
 #endif
