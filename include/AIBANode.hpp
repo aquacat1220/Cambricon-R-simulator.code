@@ -6,7 +6,10 @@
 #include "AIBACommon.hpp"
 
 using namespace std;
-
+/**
+ * @brief Class representing a single AIBA node.
+ * 
+ */
 class AIBANode {
     public:
     AIBANode(unsigned char coord);
@@ -22,7 +25,20 @@ class AIBANode {
     vector<Sum> out_down_sums;
 
     public:
+    /**
+     * @brief Propagates input values through the node, and write to output values.
+     * This function should be called every cycle.
+     * Cycle() doesn't magically propagate the outputs to adjacent node's inputs. This is a responsibility of AIBA.
+     * 
+     */
     void Cycle();
+
+    /**
+     * @brief Loads the hash table into sram_bank.
+     * 
+     * @param hash_table Pointer to start of hash table as a int array.
+     * Array should be of length 2**11 (2**13 bytes).
+     */
     void HashTableLoad(int* hash_table);
 
     private:
