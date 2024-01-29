@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(Cambricon-R-simulator.code VERSION 0.1.0 LANGUAGES C CXX)
 
-set(CMAKE_C_STANDARD_REQUIRED 99)
-set(CMAKE_CXX_STANDARD_REQUIRED 23)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(CTest)
 enable_testing()
