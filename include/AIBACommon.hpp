@@ -15,7 +15,7 @@ struct Request {
     // Interpolation weight of hash entry
     float weight;
     // Destination node for accumulation
-    unsigned int dest;
+    unsigned char dest;
 };
 
 struct Packet {
@@ -26,7 +26,7 @@ struct Packet {
     // Interpolated data
     float data;
     // Destination node for accumulation
-    unsigned int dest;
+    unsigned char dest;
 };
 
 struct PSum {
