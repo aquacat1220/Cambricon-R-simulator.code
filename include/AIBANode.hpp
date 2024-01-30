@@ -45,6 +45,7 @@ class AIBANode {
     vector<Request> local_request_buffer;
     vector<PSum> psum_buffer;
     vector<HashEntry> sram_bank;
+    vector<Packet> arrival_buffer;
     // Coordinate in NoC of AIBA nodes. Range between 0 ~ 255.
     unsigned char coord;
 
@@ -54,6 +55,18 @@ class AIBANode {
      * 
      */
     void ClearOutputs();
+    /**
+     * @brief Routing all Packets in the input buffer.
+     * 
+     * @param pkt_buffer contains the Packets to be routed
+     */
+    void Routing(vector<Packet>& pkt_buffer);
+    /**
+     * @brief Routing a single Packet.
+     * 
+     * @param pkt is the Packet to be routed.
+     */
+    void Routing_pkt(Packet pkt);
 };
 
 #endif
