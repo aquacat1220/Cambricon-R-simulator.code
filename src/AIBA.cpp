@@ -14,9 +14,16 @@ AIBA::AIBA(int grid_resolution) : AIBAPP_(grid_resolution) {
 }
 
 void AIBA::Cycle(){
-    //_AIBAPP.Cycle()
-    //_AIBANodes
+    // Preprocessing by AIBAPP
+    AIBAPP_.in_point_batch = in_points;
+    AIBAPP_.Cycle();
 
+    // 16x16 AIBANode mesh Cycle()
+    for (AIBANode &aibanode : AIBANodes_) {
+        aibanode.Cycle();
+    }
+
+    this->Transition();
 }
 
 void AIBA::Transition(){
