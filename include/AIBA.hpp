@@ -4,10 +4,8 @@
 #include "AIBAPP.hpp"
 #include "AIBANode.hpp"
 
-class AIBA{
+class AIBA {
     private:
-
-    protected:
         AIBAPP AIBAPP_;
         vector<AIBANode> AIBANodes_;
         vector<Sum> output_buffer_;
@@ -17,4 +15,5 @@ class AIBA{
         void Cycle(void);
         void Transition(void);
 };
+
 #endif
