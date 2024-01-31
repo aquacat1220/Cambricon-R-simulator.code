@@ -36,12 +36,32 @@ class AIBA {
      * 
      */
     void Cycle(void);
-    void Transition(void);
 
     private:
+    /**
+     * @brief The grid resolution this AIBA unit is responsible of.
+     * Used in preprocessor, should be passed in during construction.
+     * 
+     */
     int grid_resolution_;
+    /**
+     * @brief The preprocessing unit of this AIBA.
+     * 
+     */
     AIBAPP AIBAPP_;
+    /**
+     * @brief 256 AIBA nodes arranged as 16x16 mesh.
+     * 
+     */
     vector<AIBANode> AIBANodes_;
+
+    private:
+    /**
+     * @brief Propagates output values of components (AIBAPP_, AIBANodes_) to their inputs.
+     * This function should only be called in Cycle(), after ticking all of the components.
+     * 
+     */
+    void Transition(void);
 };
 
 #endif
