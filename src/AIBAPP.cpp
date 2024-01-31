@@ -27,7 +27,7 @@ void AIBAPP::Cycle() {
             gridx = gridx + offx;
             gridy = gridy + offy;
             gridz = gridz + offz;
-            unsigned int addr = Hash(gridx, gridy, gridz) % (2 << 19);
+            unsigned int addr = Hash(gridx, gridy, gridz) % (1 << 19);
             
             // @todo Implement trilinear interpolation to calculate weight.
             float weight;

@@ -19,6 +19,8 @@ struct HashEntry {
     float elem1;
 };
 
+bool operator==(const HashEntry& lhs, const HashEntry& rhs);
+
 /**
  * @brief Struct representing hash entry read request.
  * 
