@@ -115,3 +115,8 @@ void AIBANode::Routing_pkt(Packet pkt){
     }
 
 }
+
+const vector<HashEntry>& AIBANode::GetSramBank() {
+    const auto& ref = this->sram_bank_;
+    return ref;
+}

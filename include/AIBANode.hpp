@@ -67,6 +67,16 @@ class AIBANode {
      * @param pkt is the Packet to be routed.
      */
     void Routing_pkt(Packet pkt);
+
+    public:
+    /**
+     * @brief Get a constant reference to sram_bank_.
+     * 
+     * @return constant reference to this->sram_bank_.
+     * 
+     * @warning Should only be used for testing purposes.
+     */
+    const vector<HashEntry>& GetSramBank();
 };
 
 #endif
