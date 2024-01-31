@@ -8,9 +8,9 @@ class AIBA{
     private:
 
     protected:
-        AIBAPP _AIBAPP;
-        vector<AIBANode> _AIBANodes;
-        vector<Sum> _output_buffer;
+        AIBAPP AIBAPP_;
+        vector<AIBANode> AIBANodes_;
+        vector<Sum> output_buffer_;
 
     public:
         AIBA();

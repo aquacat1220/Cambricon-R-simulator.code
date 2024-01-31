@@ -3,9 +3,9 @@
 #include <tuple>
 
 AIBAPP::AIBAPP(int grid_resolution) {
-    this->grid_resolution = grid_resolution;
-    this->dest_reg = 0;
-    this->ridx_reg = 0;
+    this->grid_resolution_ = grid_resolution;
+    this->dest_reg_ = 0;
+    this->ridx_reg_ = 0;
 }
 
 void AIBAPP::Cycle() {
@@ -17,9 +17,9 @@ void AIBAPP::Cycle() {
         Point& pt = in_point_batch[pidx];
 
         unsigned int gridx, gridy, gridz;
-        gridx = static_cast<int>(pt.x * this->grid_resolution);
-        gridy = static_cast<int>(pt.y * this->grid_resolution);
-        gridz = static_cast<int>(pt.z * this->grid_resolution);
+        gridx = static_cast<int>(pt.x * this->grid_resolution_);
+        gridy = static_cast<int>(pt.y * this->grid_resolution_);
+        gridz = static_cast<int>(pt.z * this->grid_resolution_);
 
         // Structured bindings + tuple in C++!! So cool.
         tuple<int, int, int> offsets[8] = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1}, {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}};
@@ -32,7 +32,7 @@ void AIBAPP::Cycle() {
             // @todo Implement trilinear interpolation to calculate weight.
             float weight;
 
-            out_reqs.emplace_back(this->ridx_reg, pidx, addr, weight, this->dest_reg + pidx);
+            out_reqs.emplace_back(this->ridx_reg_, pidx, addr, weight, this->dest_reg_ + pidx);
         }
     }
     return;

@@ -56,13 +56,13 @@ class AIBAPP {
      * Should be passed in from its AIBA.
      * 
      */
-    int grid_resolution;
+    int grid_resolution_;
     /**
      * @brief The destination AIBA node coordinate used for this batch.
      * Each call to Cycle() will increment this value by 32.
      * 
      */
-    unsigned char dest_reg;
+    unsigned char dest_reg_;
     /**
      * @brief The Request::ridx value used for this batch.
      * Each call to Cycle() will increment this value by 1.
@@ -72,7 +72,7 @@ class AIBAPP {
      * @todo Implement a safety mechanism somewhere.
      * 
      */
-    unsigned char ridx_reg;
+    unsigned char ridx_reg_;
 
     private:
     /**

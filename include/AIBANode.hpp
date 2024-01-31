@@ -42,12 +42,12 @@ class AIBANode {
     void HashTableLoad(HashEntry* hash_table);
 
     private:
-    vector<Request> local_request_buffer;
-    vector<PSum> psum_buffer;
-    vector<HashEntry> sram_bank;
-    vector<Packet> arrival_buffer;
+    vector<Request> local_request_buffer_;
+    vector<PSum> psum_buffer_;
+    vector<HashEntry> sram_bank_;
+    vector<Packet> arrival_buffer_;
     // Coordinate in NoC of AIBA nodes. Range between 0 ~ 255.
-    unsigned char coord;
+    unsigned char coord_;
 
     private:
     /**

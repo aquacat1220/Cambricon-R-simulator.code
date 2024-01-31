@@ -1,7 +1,7 @@
 #include "AIBANode.hpp"
 
 AIBANode::AIBANode(unsigned char coord) {
-    this->coord = coord;
+    this->coord_ = coord;
 }
 
 void AIBANode::Cycle(void) {
@@ -10,9 +10,9 @@ void AIBANode::Cycle(void) {
 
     // Whether the vertex address belongs to the current node's sram bank.
     for(vector<Request>::iterator itr = in_left_reqs.begin(); itr!=in_left_reqs.end(); ++itr){
-        if(coord == static_cast<unsigned char>((itr->addr >> 11) & 0xFF)){
+        if(coord_ == static_cast<unsigned char>((itr->addr >> 11) & 0xFF)){
             // Store the Request in LRB 
-            local_request_buffer.push_back(*itr);
+            local_request_buffer_.push_back(*itr);
         }else{
             // Transfer the Request to right node
             out_right_reqs.push_back(*itr);
@@ -20,9 +20,9 @@ void AIBANode::Cycle(void) {
     }
 
     // SRAM bank access
-    Request req = *local_request_buffer.begin();
-    local_request_buffer.erase(local_request_buffer.begin());
-    HashEntry hashentry = sram_bank[req.addr & 0x000007FF];
+    Request req = *local_request_buffer_.begin();
+    local_request_buffer_.erase(local_request_buffer_.begin());
+    HashEntry hashentry = sram_bank_[req.addr & 0x000007FF];
 
     // Apply weight to hash entry
     hashentry.elem0 *= req.weight;
@@ -50,9 +50,9 @@ void AIBANode::Cycle(void) {
     out_down_sums.insert(out_down_sums.end(), in_up_sums.begin(), in_up_sums.end());
 
     // Iterate over arrive packets and accumulate into psum_buffer.
-    for (const Packet &pkt : arrival_buffer) {
+    for (const Packet &pkt : arrival_buffer_) {
         // First check for preexisting matching psums.
-        for (PSum &psum : psum_buffer) {
+        for (PSum &psum : psum_buffer_) {
             if ((pkt.ridx == psum.ridx) && (pkt.pidx == psum.pidx)) {
                 // If matching psum exists, accumulate packet.
                 psum.psum.elem0 += pkt.data.elem0;
@@ -69,14 +69,14 @@ void AIBANode::Cycle(void) {
         }
 
         // If there are no matching psums, add a new one to the buffer!
-        psum_buffer.emplace_back(pkt.ridx, pkt.pidx, pkt.data, 1);
+        psum_buffer_.emplace_back(pkt.ridx, pkt.pidx, pkt.data, 1);
     }
 
     return;
 }
 
 void AIBANode::HashTableLoad(HashEntry* hash_table) {
-    sram_bank.assign(hash_table, hash_table + (1 << 11));
+    sram_bank_.assign(hash_table, hash_table + (1 << 11));
     return;
 }
 
@@ -96,10 +96,10 @@ void AIBANode::Routing(vector<Packet> &pkt_buffer){
 }
 
 void AIBANode::Routing_pkt(Packet pkt){
-    unsigned char k = coord - pkt.dest;
-    unsigned char l = coord/16 - pkt.dest/16;
+    unsigned char k = coord_ - pkt.dest;
+    unsigned char l = coord_/16 - pkt.dest/16;
     if (k==0){
-        arrival_buffer.push_back(pkt);
+        arrival_buffer_.push_back(pkt);
     }else if (k<0){
         if (l==0) {
             out_right_pkts.push_back(pkt);
