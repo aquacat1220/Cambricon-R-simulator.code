@@ -28,6 +28,10 @@ void AIBA::Cycle(){
 
 void AIBA::Transition(){
     //address crossbar
+    for(Request &req : AIBAPP_.out_reqs) {
+        unsigned char target_row = static_cast<unsigned char> ((req.addr >> 15) & 0x0F);
+        AIBANodes_[target_row * 16].in_left_reqs.push_back(req);
+    }
     //output crossbar
-
+    
 }

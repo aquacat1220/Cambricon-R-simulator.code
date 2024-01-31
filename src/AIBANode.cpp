@@ -19,32 +19,33 @@ void AIBANode::Cycle(void) {
         }
     }
 
-    // SRAM bank access
-    Request req = *local_request_buffer_.begin();
-    local_request_buffer_.erase(local_request_buffer_.begin());
-    HashEntry hashentry = sram_bank_[req.addr & 0x000007FF];
+    if(!local_request_buffer_.empty()) {
+        // SRAM bank access
+        Request req = *local_request_buffer_.begin();
+        local_request_buffer_.erase(local_request_buffer_.begin());
+        HashEntry hashentry = sram_bank_[req.addr & 0x000007FF];
 
-    // Apply weight to hash entry
-    hashentry.elem0 *= req.weight;
-    hashentry.elem1 *= req.weight;
+        // Apply weight to hash entry
+        hashentry.elem0 *= req.weight;
+        hashentry.elem1 *= req.weight;
+        
+        // Generating Packet with encoded data
+        Packet sram_accessed_pkt;
+        sram_accessed_pkt.ridx = req.ridx;
+        sram_accessed_pkt.pidx = req.pidx;
+        sram_accessed_pkt.data = hashentry;
+        sram_accessed_pkt.dest = req.dest;
+
+        //Routing
+        this->Routing_pkt(sram_accessed_pkt);
+    }
     
-    // Generating Packet with encoded data
-    Packet sram_accessed_pkt;
-    sram_accessed_pkt.ridx = req.ridx;
-    sram_accessed_pkt.pidx = req.pidx;
-    sram_accessed_pkt.data = hashentry;
-    sram_accessed_pkt.dest = req.dest;
-
     //Packets
     //Routing logic
-    this->Routing_pkt(sram_accessed_pkt);
     this->Routing(in_up_pkts);
     this->Routing(in_down_pkts);
     this->Routing(in_left_pkts);
     this->Routing(in_right_pkts);
-        //case2. destination node
-            //Psum computing
-            //Psum counter check (==7)
 
     // Transfer input sums from up node to down node.
     out_down_sums.insert(out_down_sums.end(), in_up_sums.begin(), in_up_sums.end());
