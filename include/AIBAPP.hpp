@@ -78,14 +78,24 @@ class AIBAPP {
     /**
      * @brief Hash function to access hash table.
      * 
-     * @param gridx x coordinate
-     * @param gridy y coordinate.
-     * @param gridz z coordinate.
+     * @param grid_x x coordinate.
+     * @param grid_y y coordinate.
+     * @param grid_z z coordinate.
      * @return Calculated hash value.
      * 
      * @warning InstantNGP uses bitwise XOR, Cambricon-R uses addition. Current implementation uses XOR (original approach).
      */
-    static unsigned int Hash(int gridx, int gridy, int gridz);
+    static unsigned int Hash(int grid_x, int grid_y, int grid_z);
+
+    /**
+     * @brief Calculates weights for trilinear interpolation.
+     * 
+     * @param offx Offset of target x coordinate scaled to 0 ~ 1.
+     * @param offy Offset of target y coordinate scaled to 0 ~ 1.
+     * @param offz Offset of target z coordinate scaled to 0 ~ 1.
+     * @return Size 8 vector of calculated weights, in the order of 000, 001, 010, 011, 100, 101, 110, 111.
+     */
+    static vector<float> TriLerp(float offx, float offy, float offz);
 };
 
 #endif

@@ -16,18 +16,18 @@ void AIBAPP::Cycle() {
     for (unsigned char pidx = 0; pidx < 32; pidx++) {
         Point& pt = in_point_batch[pidx];
 
-        unsigned int gridx, gridy, gridz;
-        gridx = static_cast<int>(pt.x * this->grid_resolution_);
-        gridy = static_cast<int>(pt.y * this->grid_resolution_);
-        gridz = static_cast<int>(pt.z * this->grid_resolution_);
+        unsigned int grid_x, grid_y, grid_z;
+        grid_x = static_cast<int>(pt.x * this->grid_resolution_);
+        grid_y = static_cast<int>(pt.y * this->grid_resolution_);
+        grid_z = static_cast<int>(pt.z * this->grid_resolution_);
 
         // Structured bindings + tuple in C++!! So cool.
-        tuple<int, int, int> offsets[8] = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1}, {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}};
-        for (auto [offx, offy, offz] : offsets) {
-            gridx = gridx + offx;
-            gridy = gridy + offy;
-            gridz = gridz + offz;
-            unsigned int addr = Hash(gridx, gridy, gridz) % (1 << 19);
+        tuple<int, int, int> grid_offsets[8] = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1}, {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}};
+        for (auto [grid_offx, grid_offy, grid_offz] : grid_offsets) {
+            grid_x = grid_x + grid_offx;
+            grid_y = grid_y + grid_offy;
+            grid_z = grid_z + grid_offz;
+            unsigned int addr = Hash(grid_x, grid_y, grid_z) % (1 << 19);
             
             // @todo Implement trilinear interpolation to calculate weight.
             float weight;
@@ -42,6 +42,9 @@ void AIBAPP::ClearOutputs() {
     out_reqs.clear();
 }
 
-unsigned int AIBAPP::Hash(int gridx, int gridy, int gridz) {
-    return (gridx * 1) ^ (gridy * 2654435761) ^ (gridz * 805459861);
+unsigned int AIBAPP::Hash(int grid_x, int grid_y, int grid_z) {
+    return (grid_x * 1) ^ (grid_y * 2654435761) ^ (grid_z * 805459861);
+}
+
+vector<float> TriLerp(float offx, float offy, float offz) {
 }
