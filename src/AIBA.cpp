@@ -1,6 +1,7 @@
 #include "AIBA.hpp"
 
-AIBA::AIBA(){
+AIBA::AIBA(int grid_resolution) : AIBAPP_(grid_resolution) {
+
 }
 
 void AIBA::Cycle(){
