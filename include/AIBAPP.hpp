@@ -85,7 +85,7 @@ class AIBAPP {
      * 
      * @warning InstantNGP uses bitwise XOR, Cambricon-R uses addition. Current implementation uses XOR (original approach).
      */
-    static unsigned int AIBAPP::Hash(int gridx, int gridy, int gridz);
+    static unsigned int Hash(int gridx, int gridy, int gridz);
 };
 
 #endif
