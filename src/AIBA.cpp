@@ -28,10 +28,19 @@ void AIBA::Cycle(){
 
 void AIBA::Transition(){
     //address crossbar
-    for(Request &req : AIBAPP_.out_reqs) {
+    for (Request &req : AIBAPP_.out_reqs) {
         unsigned char target_row = static_cast<unsigned char> ((req.addr >> 15) & 0x0F);
         AIBANodes_[target_row * 16].in_left_reqs.push_back(req);
     }
     //output crossbar
-    
+    for (unsigned int column = 0; column < 16; ++column) {
+        for (int i = 0; i < 2; ++i) {
+            if(!AIBANodes_[240 + column].out_down_sums.empty()){
+                Sum sum = *AIBANodes_[240 + column].out_down_sums.begin();
+                out_sum_buffer.insert(pair<unsigned char, Sum>(sum.ridx, sum));
+                AIBANodes_[240 + column].out_down_sums.erase(AIBANodes_[240 + column].out_down_sums.begin());
+            }
+        }
+        
+    }
 }

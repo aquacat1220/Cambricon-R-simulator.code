@@ -26,7 +26,7 @@ class AIBA {
      * Unlike other output variables, out_sum_buffer should not be invalidated by external classes, unless the request is fully finished and broadcasted.
      * 
      */
-    unordered_map<unsigned char, vector<Sum>> out_sum_buffer;
+    unordered_multimap<unsigned char, Sum> out_sum_buffer;
     
     public:
     /**
