@@ -36,8 +36,12 @@ void AIBAPP::Cycle() {
     return;
 }
 
+void AIBAPP::ClearInputs() {
+    this->in_point_batch.clear();
+}
+
 void AIBAPP::ClearOutputs() {
-    out_reqs.clear();
+    this->out_reqs.clear();
 }
 
 unsigned int AIBAPP::Hash(int grid_x, int grid_y, int grid_z) {

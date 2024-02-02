@@ -43,12 +43,6 @@ class AIBAPP {
      */
     void Cycle();
 
-    /**
-     * @brief Clears all outputs.
-     * 
-     */
-    void ClearOutputs();
-
     private:
     /**
      * @brief The grid resolution this preprocessor unit is responsible of.
@@ -75,6 +69,16 @@ class AIBAPP {
     unsigned char ridx_reg_;
 
     private:
+    /**
+     * @brief Clears all inputs.
+     * 
+     */
+    void ClearInputs();
+    /**
+     * @brief Clears all outputs.
+     * 
+     */
+    void ClearOutputs();
     /**
      * @brief Hash function to access hash table.
      * 
