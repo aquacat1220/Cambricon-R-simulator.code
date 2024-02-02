@@ -73,12 +73,23 @@ void AIBANode::Cycle(void) {
         psum_buffer_.emplace_back(pkt.ridx, pkt.pidx, pkt.data, 1);
     }
 
+    this->ClearInputs();
+
     return;
 }
 
 void AIBANode::HashTableLoad(HashEntry* hash_table) {
     sram_bank_.assign(hash_table, hash_table + (1 << 11));
     return;
+}
+
+void AIBANode::ClearInputs() {
+    in_left_reqs.clear();
+    in_up_pkts.clear();
+    in_down_pkts.clear();
+    in_left_pkts.clear();
+    in_right_pkts.clear();
+    in_up_sums.clear();
 }
 
 void AIBANode::ClearOutputs() {
@@ -97,22 +108,22 @@ void AIBANode::Routing(vector<Packet> &pkt_buffer){
 }
 
 void AIBANode::Routing_pkt(Packet pkt){
-    unsigned char k = coord_ - pkt.dest;
-    unsigned char l = coord_/16 - pkt.dest/16;
-    if (k==0){
-        arrival_buffer_.push_back(pkt);
-    }else if (k<0){
-        if (l==0) {
-            out_right_pkts.push_back(pkt);
-        }else{
-            out_down_pkts.push_back(pkt);
-        }
-    }else{
-        if (l==0) {
+    unsigned char my_row = this->coord_ >> 4;
+    unsigned char my_col = this->coord_ & 0xF;
+    unsigned char target_row = pkt.dest >> 4;
+    unsigned char target_col = pkt.dest & 0xF;
+
+    if (target_row < my_row)
+        out_up_pkts.push_back(pkt);
+    else if (target_row > my_row)
+        out_down_pkts.push_back(pkt);
+    else {
+        if (target_col < my_col)
             out_left_pkts.push_back(pkt);
-        }else{
-            out_up_pkts.push_back(pkt);
-        }
+        else if (target_col > my_col)
+            out_right_pkts.push_back(pkt);
+        else
+            arrival_buffer_.push_back(pkt);
     }
 
 }

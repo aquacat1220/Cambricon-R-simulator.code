@@ -51,6 +51,11 @@ class AIBANode {
 
     private:
     /**
+     * @brief Clears all inputs.
+     * 
+     */
+    void ClearInputs();
+    /**
      * @brief Clears all outputs.
      * 
      */
