@@ -21,6 +21,8 @@ struct HashEntry {
 
 bool operator==(const HashEntry& lhs, const HashEntry& rhs);
 
+bool operator<(const HashEntry& lhs, const HashEntry& rhs);
+
 /**
  * @brief Struct representing hash entry read request.
  * 
@@ -38,6 +40,10 @@ struct Request {
     unsigned char dest;
 };
 
+bool operator==(const Request& lhs, const Request& rhs);
+
+bool operator<(const Request& lhs, const Request& rhs);
+
 /**
  * @brief Struct representing read hash entry data.
  * 
@@ -52,6 +58,10 @@ struct Packet {
     // Destination node for accumulation
     unsigned char dest;
 };
+
+bool operator==(const Packet& lhs, const Packet& rhs);
+
+bool operator<(const Packet& lhs, const Packet& rhs);
 
 /**
  * @brief Struct representing accumulating partial sum.
