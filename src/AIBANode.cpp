@@ -52,9 +52,11 @@ void AIBANode::Cycle(void) {
 
     // Iterate over arrive packets and accumulate into psum_buffer.
     for (const Packet &pkt : arrival_buffer_) {
+        unsigned int first = 0;
         // First check for preexisting matching psums.
         for (PSum &psum : psum_buffer_) {
             if ((pkt.ridx == psum.ridx) && (pkt.pidx == psum.pidx)) {
+                first = 1;
                 // If matching psum exists, accumulate packet.
                 psum.psum.elem0 += pkt.data.elem0;
                 psum.psum.elem1 += pkt.data.elem1;
@@ -68,10 +70,12 @@ void AIBANode::Cycle(void) {
                 break;
             }
         }
-
-        // If there are no matching psums, add a new one to the buffer!
-        psum_buffer_.emplace_back(pkt.ridx, pkt.pidx, pkt.data, 1);
+        if (first == 0) {
+            // If there are no matching psums, add a new one to the buffer!
+            psum_buffer_.emplace_back(pkt.ridx, pkt.pidx, pkt.data, 1);
+        }
     }
+    arrival_buffer_.clear();
 
     this->ClearInputs();
 
@@ -130,5 +134,10 @@ void AIBANode::Routing_pkt(Packet pkt){
 
 const vector<HashEntry>& AIBANode::GetSramBank() {
     const auto& ref = this->sram_bank_;
+    return ref;
+}
+
+const vector<PSum>& AIBANode::GetPSumBuffer() {
+    const auto& ref = this->psum_buffer_;
     return ref;
 }

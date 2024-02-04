@@ -82,6 +82,14 @@ class AIBANode {
      * @warning Should only be used for testing purposes.
      */
     const vector<HashEntry>& GetSramBank();
+    /**
+     * @brief Get a constant reference to psum_buffer_.
+     * 
+     * @return constant reference to this->psum_buffer_.
+     * 
+     * @warning Should only be used for testing purposes.
+     */
+    const vector<PSum>& GetPSumBuffer(); 
 };
 
 #endif

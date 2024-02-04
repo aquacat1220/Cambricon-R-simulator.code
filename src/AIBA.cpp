@@ -38,7 +38,7 @@ void AIBA::Transition(){
             if(!AIBANodes_[240 + column].out_down_sums.empty()){
                 Sum sum = *AIBANodes_[240 + column].out_down_sums.begin();
                 out_sum_buffer.insert(pair<unsigned char, Sum>(sum.ridx, sum));
-                if (out_sum_buffer.count(sum.ridx) == 8) {
+                if (out_sum_buffer.count(sum.ridx) == 32) {
                     //delegate
                 }
                 AIBANodes_[240 + column].out_down_sums.erase(AIBANodes_[240 + column].out_down_sums.begin());
