@@ -1,5 +1,14 @@
 #include "AIBACommon.hpp"
 
+
+bool operator==(const Point& lhs, const Point& rhs) {
+    return ((lhs.x == rhs.x) && (lhs.y == rhs.y) && (lhs.z == rhs.z));
+}
+
+bool operator<(const Point& lhs, const Point& rhs) {
+    return ((lhs.x < rhs.x) || (lhs.y < rhs.y) || (lhs.z < rhs.z));
+}
+
 bool operator==(const HashEntry& lhs, const HashEntry& rhs)
 {
     return ((lhs.elem0 == rhs.elem0) && (lhs.elem1 == rhs.elem1));

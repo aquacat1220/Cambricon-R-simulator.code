@@ -9,6 +9,10 @@ struct Point {
     float x, y, z;
 };
 
+bool operator==(const Point& lhs, const Point& rhs);
+
+bool operator<(const Point& lhs, const Point& rhs);
+
 /**
  * @brief Representing entry in the hash table.
  * Maybe it should be array of half precision floats...
