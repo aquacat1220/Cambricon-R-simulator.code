@@ -14,14 +14,16 @@ foreach(test_source ${test_sources})
         )
     if(test_prefix STREQUAL ".")
         set(test_prefix "")
+        set(test_prefix_noslash "")
     else()
         set(test_prefix ${test_prefix}/)
+        string(REPLACE "/" "_" test_prefix_noslash ${test_prefix})
     endif()
 
     get_filename_component(test_source_name ${test_source} NAME_WE)
-    add_executable(${test_source_name} ${test_source} ${sources})
+    add_executable(${test_prefix_noslash}${test_source_name} ${test_source} ${sources})
     add_test(
         NAME ${test_prefix}${test_source_name}
-        COMMAND $<TARGET_FILE:${test_source_name}>
+        COMMAND $<TARGET_FILE:${test_prefix_noslash}${test_source_name}>
     )
 endforeach()
