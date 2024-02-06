@@ -33,6 +33,10 @@ void AIBAPP::Cycle() {
             out_reqs.emplace_back(this->ridx_reg_, pidx, addr, weight, this->dest_reg_ + pidx);
         }
     }
+
+    // Increment ridx, dest registers.
+    this->ridx_reg_++;
+    this->dest_reg_ += 32;
     
     // Clear all inputs before returning.
     this->ClearInputs();
