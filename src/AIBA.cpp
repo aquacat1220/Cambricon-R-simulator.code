@@ -29,6 +29,12 @@ void AIBA::Cycle(){
     ClearInputs();
 }
 
+void AIBA::HashTableLoad(HashEntry* hash_table) {
+    for (int i = 0; i < 256; i++) {
+        AIBANodes_[i].HashTableLoad(hash_table + (i * (1 << 11)));
+    }
+}
+
 void AIBA::Transition(){
     //address crossbar
     for (Request &req : AIBAPP_.out_reqs) {
