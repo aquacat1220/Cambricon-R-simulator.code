@@ -21,12 +21,12 @@ class AIBA {
     vector<Point> in_points;
     // Outputs
     /**
-     * @brief Output buffer which maps RIdx to their output 32 sums.
-     * AIBA will only fill out_req_buffer. It is your responsibility to check for finished requests and consume it.
-     * Unlike other output variables, out_sum_buffer should not be invalidated by external classes, unless the request is fully finished and broadcasted.
+     * @brief Vector of calculated sums from the same batch.
+     * AIBA processes multiple batches at the same time, and it is possible that more than two batches finish calculating at the same cycle.
+     * Each element in out_sums is a vector of 32 calculated sums coming from the same batch.
      * 
      */
-    unordered_multimap<unsigned char, Sum> out_sum_buffer;
+    vector<vector<Sum>> out_sums;
     
     public:
     /**
@@ -54,6 +54,12 @@ class AIBA {
      * 
      */
     vector<AIBANode> AIBANodes_;
+    /**
+     * @brief Internal buffer which maps RIdx to their output sums.
+     * When 32 sums accumulate, AIBA will pop those sums into a vector, and return it in out_sums.
+     * 
+     */
+    unordered_multimap<unsigned char, Sum> sum_buffer_;
 
     private:
     /**
@@ -62,6 +68,30 @@ class AIBA {
      * 
      */
     void Transition(void);
+    /**
+     * @brief Clears all inputs.
+     * 
+     */
+    void ClearInputs();
+    /**
+     * @brief Clears all outputs.
+     * 
+     */
+    void ClearOutputs();
+    /**
+     * @brief Propagates output values from a node to their adjacent components.
+     * This function is called, and should only be called in Transition.
+     * 
+     * @param coord Coordinate of the aiba node to process.
+     * 
+     */
+    void NodeTransition(unsigned char coord);
+    /**
+     * @brief Checks if the sum_buffer_ has all 32 sums ready for the given ridx, and inserts it into out_sums if so.
+     * 
+     * @param ridx The request index to check for.
+     */
+    void CheckSumBuffer(unsigned char ridx);
 };
 
 #endif

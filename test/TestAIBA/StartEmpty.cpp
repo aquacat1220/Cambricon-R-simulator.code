@@ -8,7 +8,7 @@ int main() {
     AIBA aiba = AIBA(1 << 12);
 
     auto before_in = aiba.in_points;
-    auto before_out = aiba.out_sum_buffer;
+    auto before_out = aiba.out_sums;
 
     sort(before_in.begin(), before_in.end());
 
