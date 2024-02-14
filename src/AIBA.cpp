@@ -125,5 +125,6 @@ void AIBA::CheckSumBuffer(unsigned char ridx) {
     assert(sum_vec.size() == 32);
 
     this->out_sums.push_back(sum_vec);
+    this->sum_buffer_.erase(ridx);
     return;
 }
