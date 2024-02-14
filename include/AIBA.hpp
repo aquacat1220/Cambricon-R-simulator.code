@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 
+#include "AIBACommon.hpp"
 #include "AIBAPP.hpp"
 #include "AIBANode.hpp"
 
