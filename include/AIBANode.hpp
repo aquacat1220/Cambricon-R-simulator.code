@@ -37,7 +37,7 @@ class AIBANode {
      * @brief Loads the hash table into sram_bank.
      * 
      * @param hash_table Pointer to start of hash table as an array of HashEntry.
-     * Array should be of length 2**11 (2**13 bytes).
+     * Array should be of length 2**11.
      */
     void HashTableLoad(HashEntry* hash_table);
 

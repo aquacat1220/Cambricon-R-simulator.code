@@ -41,7 +41,7 @@ class AIBA {
      * @brief Loads the hash table into AIBA nodes.
      * 
      * @param hash_table Pointer to start of hash table as an array of HashEntry.
-     * Array should be of length 256 * 2**11 (2**21 bytes).
+     * Array should be of length 256 * 2**11.
      */
     void HashTableLoad(HashEntry* hash_table);
 
