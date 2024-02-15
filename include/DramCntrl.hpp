@@ -29,24 +29,24 @@ class dram_cntrler_base_t {
 };
 
 class timing_dram_cntrler_t : public dram_cntrler_base_t {
-public: 
-    timing_dram_cntrler_t(const string& config_file, const string& output_dir)
-    : dram_cntrler_base_t(config_file, output_dir), 
-      elapsed_time_(0), next_tick_time_(0) {}
+    public: 
+        timing_dram_cntrler_t(const string& config_file, const string& output_dir)
+        : dram_cntrler_base_t(config_file, output_dir) {}
 
-    void read_callback(uint64_t addr);
-    void write_callback(uint64_t addr);
+        void read_callback(uint64_t addr);
+        void write_callback(uint64_t addr);
 
-    list<dram_message_t> to_dram_bus;
-    list<dram_message_t> from_dram_bus;
+        list<dram_message_t> to_dram_bus;
+        list<dram_message_t> from_dram_bus;
 
-    map<uint64_t, float> dram;
+        map<uint64_t, float> dram;
 
-private:
-    list<dram_message_t> wait_list_;
-    
-    double elapsed_time_;
-    double next_tick_time_;
+        void Cycle();
+        bool is_idle();
+
+    private:
+        list<dram_message_t> wait_list_;
+        
 };
 
 #endif
