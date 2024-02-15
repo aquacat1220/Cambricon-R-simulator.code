@@ -32,6 +32,7 @@ void AIBANode::Cycle(void) {
         // Generating Packet with encoded data
         Packet sram_accessed_pkt;
         sram_accessed_pkt.ridx = req.ridx;
+        sram_accessed_pkt.bidx = req.bidx;
         sram_accessed_pkt.pidx = req.pidx;
         sram_accessed_pkt.data = hashentry;
         sram_accessed_pkt.dest = req.dest;
@@ -55,7 +56,7 @@ void AIBANode::Cycle(void) {
         unsigned int first = 0;
         // First check for preexisting matching psums.
         for (PSum &psum : psum_buffer_) {
-            if ((pkt.ridx == psum.ridx) && (pkt.pidx == psum.pidx)) {
+            if ((pkt.ridx == psum.ridx) && (pkt.bidx == psum.bidx) && (pkt.pidx == psum.pidx)) {
                 first = 1;
                 // If matching psum exists, accumulate packet.
                 psum.psum.elem0 += pkt.data.elem0;
@@ -64,7 +65,7 @@ void AIBANode::Cycle(void) {
 
                 // And if psum is full, convert it to a Sum and send it out.
                 if (psum.cnt == 8) {
-                    out_down_sums.emplace_back(psum.ridx, psum.pidx, psum.psum);
+                    out_down_sums.emplace_back(psum.ridx, psum.bidx, psum.pidx, psum.psum);
                 }
 
                 break;
@@ -72,7 +73,7 @@ void AIBANode::Cycle(void) {
         }
         if (first == 0) {
             // If there are no matching psums, add a new one to the buffer!
-            psum_buffer_.emplace_back(pkt.ridx, pkt.pidx, pkt.data, 1);
+            psum_buffer_.emplace_back(pkt.ridx, pkt.bidx, pkt.pidx, pkt.data, 1);
         }
     }
     arrival_buffer_.clear();

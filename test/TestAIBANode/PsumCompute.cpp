@@ -20,6 +20,7 @@ int main() {
     vector<Request> local_reqs = {
         Request {
             .ridx = 1,
+            .bidx = 0,
             .pidx = 1,
             .addr = (17 << 11) + 000,
             .weight = 1.0,
@@ -27,6 +28,7 @@ int main() {
         },
         Request {
             .ridx = 1,
+            .bidx = 0,
             .pidx = 1,
             .addr = (17 << 11) + 100,
             .weight = 1.0,
@@ -34,6 +36,7 @@ int main() {
         },
         Request {
             .ridx = 1,
+            .bidx = 0,
             .pidx = 1,
             .addr = (17 << 11) + 200,
             .weight = 1.0,
@@ -41,6 +44,7 @@ int main() {
         },
         Request {
             .ridx = 1,
+            .bidx = 0,
             .pidx = 1,
             .addr = (17 << 11) + 300,
             .weight = 1.0,
@@ -48,6 +52,7 @@ int main() {
         },
         Request {
             .ridx = 1,
+            .bidx = 0,
             .pidx = 1,
             .addr = (17 << 11) + 400,
             .weight = 1.0,
@@ -55,6 +60,7 @@ int main() {
         },
         Request {
             .ridx = 1,
+            .bidx = 0,
             .pidx = 1,
             .addr = (17 << 11) + 500,
             .weight = 1.0,
@@ -62,6 +68,7 @@ int main() {
         },
         Request {
             .ridx = 1,
+            .bidx = 0,
             .pidx = 1,
             .addr = (17 << 11) + 600,
             .weight = 1.0,
@@ -69,6 +76,7 @@ int main() {
         },
         Request {
             .ridx = 1,
+            .bidx = 0,
             .pidx = 1,
             .addr = (17 << 11) + 700,
             .weight = 1.0,

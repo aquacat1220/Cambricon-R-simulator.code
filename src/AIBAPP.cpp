@@ -5,7 +5,6 @@
 AIBAPP::AIBAPP(int grid_resolution) {
     this->grid_resolution_ = grid_resolution;
     this->dest_reg_ = 0;
-    this->ridx_reg_ = 0;
 }
 
 void AIBAPP::Cycle() {
@@ -30,12 +29,11 @@ void AIBAPP::Cycle() {
             float weight = weights[i];
             unsigned int addr = Hash(grid_x + grid_offx, grid_y + grid_offy, grid_z + grid_offz) % (1 << 19);
 
-            out_reqs.emplace_back(this->ridx_reg_, pidx, addr, weight, this->dest_reg_ + pidx);
+            out_reqs.emplace_back(pt.ridx, pt.bidx, pt.pidx, addr, weight, this->dest_reg_ + pidx);
         }
     }
 
-    // Increment ridx, dest registers.
-    this->ridx_reg_++;
+    // Increment dest register.
     this->dest_reg_ += 32;
     
     // Clear all inputs before returning.

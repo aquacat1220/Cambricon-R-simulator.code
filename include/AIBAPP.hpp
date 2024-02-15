@@ -57,16 +57,6 @@ class AIBAPP {
      * 
      */
     unsigned char dest_reg_;
-    /**
-     * @brief The Request::ridx value used for this batch.
-     * Each call to Cycle() will increment this value by 1.
-     * @warning There are currently no safety mechanisms for overflow.
-     * Though this is very unlikely to happen, if the AIBA is currently handling more than 256 requests,
-     * two independent batches may share the same request index.
-     * @todo Implement a safety mechanism somewhere.
-     * 
-     */
-    unsigned char ridx_reg_;
 
     private:
     /**

@@ -6,7 +6,24 @@
  * 
  */
 struct Point {
-    float x, y, z;
+    /**
+     * @brief The ray index. 0 for the top-left pixel's ray, counts up right and down.
+     * 
+     */
+    unsigned int ridx;
+    /**
+     * @brief The batch index. 0 for the first batch of the ray, and 7 at max.
+     * 
+     */
+    unsigned char bidx;
+    /**
+     * @brief The point index. 0 for the first point of the batch, and 31 at max.
+     * 
+     */
+    unsigned char pidx;
+    float x;
+    float y;
+    float z;
 };
 
 bool operator==(const Point& lhs, const Point& rhs);
@@ -32,9 +49,20 @@ bool operator<(const HashEntry& lhs, const HashEntry& rhs);
  * 
  */
 struct Request {
-    // Request Index
-    unsigned char ridx;
-    // Point Index
+    /**
+     * @brief The ray index. 0 for the top-left pixel's ray, counts up right and down.
+     * 
+     */
+    unsigned int ridx;
+    /**
+     * @brief The batch index. 0 for the first batch of the ray, and 7 at max.
+     * 
+     */
+    unsigned char bidx;
+    /**
+     * @brief The point index. 0 for the first point of the batch, and 31 at max.
+     * 
+     */
     unsigned char pidx;
     // Address to read
     unsigned int addr;
@@ -53,9 +81,20 @@ bool operator<(const Request& lhs, const Request& rhs);
  * 
  */
 struct Packet {
-    // Request Index
-    unsigned char ridx;
-    // Point Index
+    /**
+     * @brief The ray index. 0 for the top-left pixel's ray, counts up right and down.
+     * 
+     */
+    unsigned int ridx;
+    /**
+     * @brief The batch index. 0 for the first batch of the ray, and 7 at max.
+     * 
+     */
+    unsigned char bidx;
+    /**
+     * @brief The point index. 0 for the first point of the batch, and 31 at max.
+     * 
+     */
     unsigned char pidx;
     // Interpolated data
     HashEntry data;
@@ -72,9 +111,20 @@ bool operator<(const Packet& lhs, const Packet& rhs);
  * 
  */
 struct PSum {
-    // Request Index
-    unsigned char ridx;
-    // Point Index
+    /**
+     * @brief The ray index. 0 for the top-left pixel's ray, counts up right and down.
+     * 
+     */
+    unsigned int ridx;
+    /**
+     * @brief The batch index. 0 for the first batch of the ray, and 7 at max.
+     * 
+     */
+    unsigned char bidx;
+    /**
+     * @brief The point index. 0 for the first point of the batch, and 31 at max.
+     * 
+     */
     unsigned char pidx;
     // Accumulated partial sum
     HashEntry psum;
@@ -87,9 +137,20 @@ struct PSum {
  * 
  */
 struct Sum {
-    // Request Index
-    unsigned char ridx;
-    // Point Index
+    /**
+     * @brief The ray index. 0 for the top-left pixel's ray, counts up right and down.
+     * 
+     */
+    unsigned int ridx;
+    /**
+     * @brief The batch index. 0 for the first batch of the ray, and 7 at max.
+     * 
+     */
+    unsigned char bidx;
+    /**
+     * @brief The point index. 0 for the first point of the batch, and 31 at max.
+     * 
+     */
     unsigned char pidx;
     // Accumulated sum
     HashEntry sum;

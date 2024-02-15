@@ -15,6 +15,7 @@ int main() {
     vector<Request> nonlocal_reqs = {
         Request {
             .ridx = 0,
+            .bidx = 0,
             .pidx = 0,
             .addr = 1 << 11,
             .weight = 0.5,
@@ -22,6 +23,7 @@ int main() {
         },
         Request {
             .ridx = 10,
+            .bidx = 0,
             .pidx = 10,
             .addr = 1 << 11,
             .weight = 0.8,
@@ -29,6 +31,7 @@ int main() {
         },
         Request {
             .ridx = 20,
+            .bidx = 0,
             .pidx = 20,
             .addr = 1 << 11,
             .weight = 0.2,
@@ -36,6 +39,7 @@ int main() {
         },
         Request {
             .ridx = 30,
+            .bidx = 0,
             .pidx = 30,
             .addr = 15 << 11,
             .weight = 0.5,
