@@ -2,11 +2,22 @@
 #define ENCODING_UNIT
 
 #include <vector>
+#include <unordered_map>
 
 #include "CambRCommon.hpp"
 #include "AIBA.hpp"
 
 using namespace std;
+
+
+/**
+ * @brief Struct representing a partially filled feature vector.
+ * 
+ */
+struct PFeature {
+    Feature feature;
+    char count;
+};
 
 class EncodingUnit {
     public:
@@ -51,12 +62,46 @@ class EncodingUnit {
      * @brief Vector storing grid resolutions of each level. Length will be 16.
      * 
      */
-    vector<int> grid_resolutions;
+    vector<int> grid_resolutions_;
     /**
      * @brief Vector storing AIBA units for each level. Length will be 16.
      * 
      */
-    vector<AIBA> aiba_units;
+    vector<AIBA> aiba_units_;
+    /**
+     * @brief Internal buffer mapping ridx, bidx to partially encoded Features.
+     * 
+     */
+    unordered_map<pair<unsigned int, unsigned char>, vector<PFeature>, PairHash> pfeature_buffer_; 
+
+
+    private:
+    /**
+     * @brief Clears all inputs.
+     * 
+     */
+    void ClearInputs();
+    /**
+     * @brief Clears all outputs.
+     * 
+     */
+    void ClearOutputs();
+    /**
+     * @brief Adds a vector of empty PFeatures to pfeature_buffer under ridx and bidx.
+     * 
+     * @param ridx 
+     * @param bidx 
+     */
+    void AddEmptyPFeatureVector(unsigned int ridx, unsigned char bidx);
+    /**
+     * @brief Accumulates a vector of Sums to a vector of PFeatures.
+     * 
+     * @param ridx 
+     * @param bidx 
+     * @param level 
+     * @param out_sums 
+     */
+    void AccumulteSumsToPFeatureVector(unsigned int ridx, unsigned char bidx, int level, vector<Sum> out_sums);
 };
 
 #endif
