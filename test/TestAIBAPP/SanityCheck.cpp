@@ -13,7 +13,7 @@
  * @param real_dist Distribution of real numbers.
  * @return tuple<vector<Point>, vector<Request>> Tuple of 32 Point vector and 256 Request vector.
  */
-tuple<vector<Point>, vector<Request>> GeneratePoints(mt19937 rand_engine, uniform_real_distribution<> real_dist);
+tuple<vector<Point>, vector<Request>> GeneratePoints(mt19937 rand_engine, uniform_real_distribution<> real_dist, unsigned int ridx, unsigned char bidx);
 
 // Generate random points and feed it into AIBAPP.
 int main() {
@@ -30,8 +30,10 @@ int main() {
         auto before_in = pp.in_point_batch;
         sort(before_in.begin(), before_in.end());
         assert(before_in == vector<Point>());
+        unsigned int ridx = i >> 3;
+        unsigned char bidx = i & 0x7;
 
-        auto [in_point_batch, expected_out_reqs] = GeneratePoints(rand_engine, real_dist);
+        auto [in_point_batch, expected_out_reqs] = GeneratePoints(rand_engine, real_dist, ridx, bidx);
 
         pp.in_point_batch = in_point_batch;
         pp.Cycle();
@@ -39,24 +41,13 @@ int main() {
         auto after_out_reqs = pp.out_reqs;
         // sort(after_out_reqs.begin(), after_out_reqs.end());
         // sort(expected_out_reqs.begin(), expected_out_reqs.end());
-        for (int i = 0; i < 256; i++) {
-            auto &after_out_req = after_out_reqs[i];
-            auto &expected_out_req = expected_out_reqs[i];
-            if (after_out_req != expected_out_req) {
-                cout << "after_out_req = { " << "ridx: " << (unsigned int)after_out_req.ridx << ", " << "pidx: " << (unsigned int)after_out_req.pidx << ", " << \
-                "addr: " << after_out_req.addr << ", " << "weight: " << after_out_req.weight << ", " << "dest: " << (unsigned int)after_out_req.dest << " }" << endl;
-                cout << "expected_out_req = { " << "ridx: " << (unsigned int)expected_out_req.ridx << ", " << "pidx: " << (unsigned int)expected_out_req.pidx << ", " << \
-                "addr: " << expected_out_req.addr << ", " << "weight: " << expected_out_req.weight << ", " << "dest: " << (unsigned int)expected_out_req.dest << " }" << endl;
-            }
-        }
         assert(after_out_reqs == expected_out_reqs);
     }
 
     return 0;
 }
 
-tuple<vector<Point>, vector<Request>> GeneratePoints(mt19937 rand_engine, uniform_real_distribution<> real_dist) {
-    static unsigned char ridx_reg = 0;
+tuple<vector<Point>, vector<Request>> GeneratePoints(mt19937 rand_engine, uniform_real_distribution<> real_dist, unsigned int ridx, unsigned char bidx) {
     static unsigned char dest_reg = 0;
 
     // Preallocate memory for return vectors.
@@ -77,7 +68,7 @@ tuple<vector<Point>, vector<Request>> GeneratePoints(mt19937 rand_engine, unifor
         float offy = y * (1 << 12) - grid_y;
         float offz = z * (1 << 12) - grid_z;
 
-        points.emplace_back(x, y, z);
+        points.emplace_back(ridx, bidx, pidx, x, y, z);
 
         tuple<int, int, int> grid_offsets[8] = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1}, {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}};
         for (auto [grid_offx, grid_offy, grid_offz] : grid_offsets) {
@@ -85,11 +76,10 @@ tuple<vector<Point>, vector<Request>> GeneratePoints(mt19937 rand_engine, unifor
             addr = addr % (1 << 19);
             float weight = abs(grid_offx - offx) * abs(grid_offy - offy) * abs(grid_offz - offz);
 
-            reqs.emplace_back(ridx_reg, pidx, addr, weight, dest_reg + pidx);
+            reqs.emplace_back(ridx, bidx, pidx, addr, weight, dest_reg + pidx);
         }
     }
 
-    ridx_reg++;
     dest_reg += 32;
     return make_tuple(points, reqs);
 }

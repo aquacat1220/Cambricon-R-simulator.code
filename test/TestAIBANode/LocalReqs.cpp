@@ -23,6 +23,7 @@ int main() {
         // Will result in local packet.
         Request {
             .ridx = 0,
+            .bidx = 0,
             .pidx = 0,
             .addr = (17 << 11) + 000,
             .weight = 0.5,
@@ -31,6 +32,7 @@ int main() {
         // Up packet.
         Request {
             .ridx = 10,
+            .bidx = 0,
             .pidx = 10,
             .addr = (17 << 11) + 100,
             .weight = 0.8,
@@ -39,6 +41,7 @@ int main() {
         // Down packet.
         Request {
             .ridx = 20,
+            .bidx = 0,
             .pidx = 20,
             .addr = (17 << 11) + 200,
             .weight = 0.2,
@@ -47,6 +50,7 @@ int main() {
         // Left packet.
         Request {
             .ridx = 30,
+            .bidx = 0,
             .pidx = 30,
             .addr = (17 << 11) + 300,
             .weight = 0.5,
@@ -55,6 +59,7 @@ int main() {
         // Right packet.
         Request {
             .ridx = 40,
+            .bidx = 0,
             .pidx = 40,
             .addr = (17 << 11) + 400,
             .weight = 0.5,
@@ -131,6 +136,7 @@ int main() {
     assert(acc_out_up_pkts == vector<Packet>({
         Packet {
             .ridx = 10,
+            .bidx = 0,
             .pidx = 10,
             .data = { 800.0, 800.0 },
             .dest = 1
@@ -139,6 +145,7 @@ int main() {
     assert(acc_out_down_pkts == vector<Packet>({
         Packet {
             .ridx = 20,
+            .bidx = 0,
             .pidx = 20,
             .data = { 400.0, 400.0 },
             .dest = 33
@@ -147,6 +154,7 @@ int main() {
     assert(acc_out_left_pkts == vector<Packet>({
         Packet {
             .ridx = 30,
+            .bidx = 0,
             .pidx = 30,
             .data = { 1500.0, 1500.0 },
             .dest = 16
@@ -155,6 +163,7 @@ int main() {
     assert(acc_out_right_pkts == vector<Packet>({
         Packet {
             .ridx = 40,
+            .bidx = 0,
             .pidx = 40,
             .data = { 2000.0, 2000.0 },
             .dest = 18

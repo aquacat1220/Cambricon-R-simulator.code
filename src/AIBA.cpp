@@ -111,20 +111,20 @@ void AIBA::NodeTransition(unsigned char coord) {
         // Bottommost node: insert to multimap.
         else {
             for (auto &out_sum : node.out_down_sums) {
-                this->sum_buffer_.insert(make_pair(out_sum.ridx, out_sum));
-                CheckSumBuffer(out_sum.ridx);
+                this->sum_buffer_.insert(make_pair(make_pair(out_sum.ridx, out_sum.bidx), out_sum));
+                CheckSumBuffer(out_sum.ridx, out_sum.bidx);
             }
         }
     }
 }
 
-void AIBA::CheckSumBuffer(unsigned char ridx) {
-    if (this->sum_buffer_.count(ridx) != 32) {
+void AIBA::CheckSumBuffer(unsigned int ridx, unsigned char bidx) {
+    if (this->sum_buffer_.count(make_pair(ridx, bidx)) != 32) {
         // Not ready.
         return;
     }
     vector<Sum> sum_vec;
-    auto its = this->sum_buffer_.equal_range(ridx);
+    auto its = this->sum_buffer_.equal_range(make_pair(ridx, bidx));
     for (auto it = its.first; it != its.second; it++) {
         sum_vec.push_back(it->second);
     }

@@ -3,10 +3,19 @@
 
 #include <vector>
 #include <unordered_map>
+#include <utility>
 
 #include "AIBACommon.hpp"
 #include "AIBAPP.hpp"
 #include "AIBANode.hpp"
+
+struct PairHash {
+    size_t operator() (const pair<unsigned int, unsigned char>& p) const {
+        auto h1 = hash<unsigned int>{}(p.first);
+        auto h2 = hash<unsigned char>{}(p.second);
+        return h1 ^ h2;
+    }
+};
 
 class AIBA {
     public:
@@ -67,7 +76,7 @@ class AIBA {
      * When 32 sums accumulate, AIBA will pop those sums into a vector, and return it in out_sums.
      * 
      */
-    unordered_multimap<unsigned char, Sum> sum_buffer_;
+    unordered_multimap<pair<unsigned int, unsigned char>, Sum, PairHash> sum_buffer_;
 
     private:
     /**
@@ -99,7 +108,7 @@ class AIBA {
      * 
      * @param ridx The request index to check for.
      */
-    void CheckSumBuffer(unsigned char ridx);
+    void CheckSumBuffer(unsigned int ridx, unsigned char bidx);
 };
 
 #endif
