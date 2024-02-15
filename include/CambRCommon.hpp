@@ -1,6 +1,10 @@
 #ifndef CAMB_R_COMMON
 #define CAMB_R_COMMON
 
+#include <vector>
+
+using namespace std;
+
 /**
  * @brief Struct representing a single ray cast to render the image.
  * 
@@ -17,6 +21,10 @@ struct Ray {
     float theta;
     float phi;
 };
+
+bool operator==(const Ray& lhs, const Ray& rhs);
+
+bool operator<(const Ray& lhs, const Ray& rhs);
 
 /**
  * @brief Struct representing a sampled point on a ray.
@@ -45,6 +53,10 @@ struct Sample {
     float phi;
 };
 
+bool operator==(const Sample& lhs, const Sample& rhs);
+
+bool operator<(const Sample& lhs, const Sample& rhs);
+
 /**
  * @brief Struct representing an encoded feature vector output by the encoding unit.
  * 
@@ -65,8 +77,12 @@ struct Feature {
      * 
      */
     unsigned char pidx;
-    float feature_vector[48];
+    vector<float> feature_vector;
 };
+
+bool operator==(const Feature& lhs, const Feature& rhs);
+
+bool operator<(const Feature& lhs, const Feature& rhs);
 
 /**
  * @brief Struct representing a pixel in the inferred image.
@@ -83,4 +99,9 @@ struct Pixel {
     float g;
     float b;
 };
+
+bool operator==(const Pixel& lhs, const Pixel& rhs);
+
+bool operator<(const Pixel& lhs, const Pixel& rhs);
+
 #endif
