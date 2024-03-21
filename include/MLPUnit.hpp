@@ -26,6 +26,25 @@ class MlpUnit {
     */
    Pixel out_pixel;
 
+   /**
+    * @brief ridx of the ray processed by this MLP Unit
+   */
+   unsigned int ridx;
+
+   /**
+    * @brief View direction Theta & Phi
+    * Projected onto the first 16 coefficients of the spherical harmonics basis
+    * Cleared and refilled when computed ray is changed.
+   */
+   float theta;
+   float phi;
+
+   /**
+    * @brief Dendity threshold value for early termination
+    * Suppose that this value is fixed value stored in ROM. 
+   */
+   float threshold;
+
    public:
    /**
     * @brief Compute density and color throuh density network and color network
@@ -47,6 +66,7 @@ class MlpUnit {
     * If this variable != 0, MLP unit cannot proceed another batch
    */
    int remain_cycle_; 
+
    /**
     * @brief MLP weights for MLP
     * (32x64, 64x16 for density network & 32x64, 64x64, 64x3 for color network)
@@ -56,22 +76,18 @@ class MlpUnit {
    vector<vector<float>> w1_color_;
    vector<vector<float>> w2_color_;
    vector<vector<float>> w3_color_;
-
-   /**
-    * @brief View direction Theta & Phi
-    * Projected onto the first 16 coefficients of the spherical harmonics basis
-    * Cleared and refilled when computed ray is changed.
-   */
-   float theta_;
-   float phi_;
    
    /**
     * @brief Save the density and color values of the sample points of the corresponding ray.
     * 
    */
-   vector<float> densities;
-   vector<vector<float>> colors;
+   vector<float> densities_;
+   vector<vector<float>> colors_;
 
+   /**
+    * @brief For checking whether density over threshold or not
+   */
+   float accumulate_dens_;
 
    private:
    /**
