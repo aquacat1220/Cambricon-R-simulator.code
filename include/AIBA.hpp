@@ -16,7 +16,12 @@ struct PairHash {
         return h1 ^ h2;
     }
 };
-
+/**
+ * @brief Class representing a single AIBA unit.
+ * Each AIBA unit is responsible for a single level of multiresolution hash table
+ * , and is capable of encoding 32 points per cycle.
+ * 
+ */
 class AIBA {
     public:
     AIBA(int grid_resolution);

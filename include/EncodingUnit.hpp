@@ -19,6 +19,11 @@ struct PFeature {
     char count;
 };
 
+/**
+ * @brief Class representing a encoding unit.
+ * The encoding unit processes 32 samples per cycle, and produces encoded feature vectors.
+ * 
+ */
 class EncodingUnit {
     public:
     EncodingUnit(int min_grid_resolution, int max_grid_resolution);
