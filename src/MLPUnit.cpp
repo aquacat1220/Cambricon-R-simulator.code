@@ -41,18 +41,19 @@ void MlpUnit::Cycle(){
         colors.insert(colors.end(), out_cols.begin(), out_cols.end());
 
         //Compute final color
-        /*
-        if (exp(- accumulate_dens_) >= threshold || bidx == 7) {
+        if (exp( - accumulate_dens_ ) >= threshold || in_features[0].bidx == 7) {
             out_pixel = ComputeColor();
+            this->ClearLocals();
         } 
-        */
-
+        
         // Now clear inputs
         this->ClearInputs();
 
     } else {
         // if MLPUnit doesn't spend 711 cycles, just decrease remain_cycle_.
-        remain_cycle_ -= 1;
+        if (remain_cycle_ > 0){
+            remain_cycle_ -= 1;
+        }
     }
 
 }
@@ -61,8 +62,31 @@ void MlpUnit::ClearInputs() {
     this->in_features.clear();
 }
 
-vector<float> ComputeColor() {
+void MlpUnit::ClearLocals() {
+    this->densities_.clear();
+    this->colors_.clear();
+    this->accumulate_dens_.clear();
+}
 
+Pixel MlpUnit::ComputeColor() {
+    Pixel pixel = {ridx, 0.0, 0.0, 0.0};
+    float T = 1.0;
+    
+    for (size_t i = 0; i < colors_.size(); ++i) {
+        float T_i = exp (- densities_[i] * distances_[i]);
+
+        for (size_t j = 0; j < 3; ++j) {
+            pixel[j+1] += T * (1 - T_i) * colors_[i][j];
+        }
+
+        T *= T_i;
+    }
+    return pixel;
+}
+
+const int& MlpUnit::GetRemainCycle() {
+    const auto& ref = this->remain_cycle_;
+    return ref;
 }
 
 vector<vector<float>> matrix_multiply(const vector<vector<float>>& A, const vector<vector<float>>& B, ActivationFunction activationFunc) {
@@ -98,8 +122,8 @@ float elu(float x, float alpha = 1.0f) {
     return x > 0 ? x : alpha * (exp(x) - 1);
 }
 
-std::vector<float> computeSphericalHarmonics(float theta, float phi) {
-    std::vector<float> Y;
+vector<float> computeSphericalHarmonics(float theta, float phi) {
+    vector<float> Y;
     Y.reserve(16);
 
     // Iterate over the degrees and orders

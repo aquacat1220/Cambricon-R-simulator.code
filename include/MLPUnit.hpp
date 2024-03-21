@@ -83,6 +83,7 @@ class MlpUnit {
    */
    vector<float> densities_;
    vector<vector<float>> colors_;
+   vector<float> distances_;
 
    /**
     * @brief For checking whether density over threshold or not
@@ -96,13 +97,23 @@ class MlpUnit {
    */
    void ClearInputs();
 
-   //Spherical harmonic func
+   /**
+    * @brief Clears private variables
+    * 
+   */
+  void ClearLocals();
 
    /**
     * @brief Compute final color. (Formula in NeRF paper)
     * 
    */
-   vector<float> ComputeColor();
+   Pixel ComputeColor();
+
+   /**
+    * @brief Get a constant reference to remain_cycle_
+    * System uses this function for checking corresponding MLP Unit done current batch computation.
+   */
+   const int& GetRemainCycle();
 };
 
 #endif
