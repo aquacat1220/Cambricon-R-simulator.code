@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cassert>
+#include <boost/math/special_functions/spherical_harmonic.hpp>
 
 using ActivationFunction = float (*)(float);
 
@@ -24,6 +25,8 @@ void MlpUnit::Cycle(){
 
         // Density network
         vector<vector<float>> out_dens = matrix_multiply(matrix_multiply(in_feature_matrix, w1_density_, relu), w2_density_, relu); 
+        assert(out_dens.size() == 32);
+        assert(out_dense[0].size() == 16);
 
         for (auto &out_den : out_dens) {
             densities_.push_back(exp(out_den[0]));
@@ -31,18 +34,19 @@ void MlpUnit::Cycle(){
         }
 
         // Spherical harmonic
-        vector<vector<float>> out_sphe;
+        //vector<vector<float>> out_sphe = ;
 
         // Color network 
         vector<vector<float>> out_cols = matrix_multiply(matrix_multiply(matrix_multiply(out_sphe, w1_color_, relu), w2_color_, relu), w3_color_, sigmoid); 
-        
+        colors.insert(colors.end(), out_cols.begin(), out_cols.end());
+
         //Compute final color
         /*
         if (exp(- accumulate_dens_) >= threshold || bidx == 7) {
             out_pixel = ComputeColor();
         } 
         */
-       
+
         // Now clear inputs
         this->ClearInputs();
 
@@ -92,4 +96,19 @@ float sigmoid(float x) {
 // ELU activation function (for high dynamic range: linear HDR)
 float elu(float x, float alpha = 1.0f) {
     return x > 0 ? x : alpha * (exp(x) - 1);
+}
+
+std::vector<float> computeSphericalHarmonics(float theta, float phi) {
+    std::vector<float> Y;
+    Y.reserve(16);
+
+    // Iterate over the degrees and orders
+    for (int l = 0; l <= 3; ++l) {
+        for (int m = -l; m <= l; ++m) {
+            double val = boost::math::spherical_harmonic_r(l, m, theta, phi);
+            Y.push_back(val);
+        }
+    }
+
+    return Y;
 }
