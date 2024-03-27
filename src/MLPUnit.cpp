@@ -26,7 +26,7 @@ void MlpUnit::Cycle(){
         // Density network
         vector<vector<float>> out_dens = matrix_multiply(matrix_multiply(in_feature_matrix, w1_density_, relu), w2_density_, relu); 
         assert(out_dens.size() == 32);
-        assert(out_dense[0].size() == 16);
+        assert(out_dens[0].size() == 16);
 
         for (auto &out_den : out_dens) {
             densities_.push_back(exp(out_den[0]));
@@ -34,11 +34,12 @@ void MlpUnit::Cycle(){
         }
 
         // Spherical harmonic
-        //vector<vector<float>> out_sphe = ;
+        // This part is not compeletly implemented.
+        vector<vector<float>> out_sphe(32, vector<float>(32, 0.0));
 
         // Color network 
         vector<vector<float>> out_cols = matrix_multiply(matrix_multiply(matrix_multiply(out_sphe, w1_color_, relu), w2_color_, relu), w3_color_, sigmoid); 
-        colors.insert(colors.end(), out_cols.begin(), out_cols.end());
+        colors_.insert(colors_.end(), out_cols.begin(), out_cols.end());
 
         //Compute final color
         if (exp( - accumulate_dens_ ) >= threshold || in_features[0].bidx == 7) {
@@ -58,6 +59,14 @@ void MlpUnit::Cycle(){
 
 }
 
+void MlpUnit::MlpWeightLoad(vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c) {
+    w1_density_ = w1_d;
+    w2_density_ = w2_d;
+    w1_color_ = w1_c;
+    w2_color_ = w2_c;
+    w3_color_ = w3_c;
+}
+
 void MlpUnit::ClearInputs() {
     this->in_features.clear();
 }
@@ -65,7 +74,7 @@ void MlpUnit::ClearInputs() {
 void MlpUnit::ClearLocals() {
     this->densities_.clear();
     this->colors_.clear();
-    this->accumulate_dens_.clear();
+    this->accumulate_dens_ = 0.0;
 }
 
 Pixel MlpUnit::ComputeColor() {
@@ -75,9 +84,9 @@ Pixel MlpUnit::ComputeColor() {
     for (size_t i = 0; i < colors_.size(); ++i) {
         float T_i = exp (- densities_[i] * distances_[i]);
 
-        for (size_t j = 0; j < 3; ++j) {
-            pixel[j+1] += T * (1 - T_i) * colors_[i][j];
-        }
+        pixel.r += T * (1 - T_i) * colors_[i][0];
+        pixel.g += T * (1 - T_i) * colors_[i][1];
+        pixel.b += T * (1 - T_i) * colors_[i][2];
 
         T *= T_i;
     }

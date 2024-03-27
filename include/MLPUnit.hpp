@@ -58,7 +58,7 @@ class MlpUnit {
     * Since we consider only inference, this function called only one time initially by the system  
     * MLP weight consists of several matrices (32x64, 64x16 for density network & 32x64, 64x64, 64x3 for color network)
    */
-   void MlpWeightLoad();
+   void MlpWeightLoad(vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c);
 
    private:
    /**
