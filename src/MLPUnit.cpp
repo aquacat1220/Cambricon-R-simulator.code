@@ -110,6 +110,10 @@ const int& MlpUnit::GetRemainCycle() {
     return ref;
 }
 
+void MlpUnit::SetDistance() {
+    distances_.assign(256, 1.0f);
+}
+
 vector<vector<float>> matrix_multiply(const vector<vector<float>>& A, const vector<vector<float>>& B, ActivationFunction activationFunc) {
     int m = A.size();
     int n = B[0].size();

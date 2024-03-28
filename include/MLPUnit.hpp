@@ -114,6 +114,16 @@ class MlpUnit {
     * System uses this function for checking corresponding MLP Unit done current batch computation.
    */
    const int& GetRemainCycle();
+
+   public:
+    /**
+     * @brief Set distances_ to meaningless distance values b/w two samples for testing.
+     * Distance value is required for computing color.
+     * However, we don't have coordinate value in Feature structure.
+     * 
+     * @warning Should only be used for testing purposes.
+     */
+    void SetDistance();
 };
 
 #endif
