@@ -6,6 +6,12 @@
 
 using ActivationFunction = float (*)(float);
 
+vector<vector<float>> matrix_multiply(const vector<vector<float>>& A, const vector<vector<float>>& B, ActivationFunction activationFunc);
+float relu(float x);
+float sigmoid(float x);
+float elu(float x, float alpha = 1.0f);
+vector<float> computeSphericalHarmonics(float theta, float phi);
+
 MlpUnit::MlpUnit() {
     remain_cycle_ = 0;
 }
@@ -133,7 +139,7 @@ float sigmoid(float x) {
 }
 
 // ELU activation function (for high dynamic range: linear HDR)
-float elu(float x, float alpha = 1.0f) {
+float elu(float x, float alpha) {
     return x > 0 ? x : alpha * (exp(x) - 1);
 }
 
