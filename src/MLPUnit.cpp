@@ -35,10 +35,16 @@ void MlpUnit::Cycle(){
 
         // Spherical harmonic
         // This part is not compeletly implemented.
-        vector<vector<float>> out_sphe(32, vector<float>(32, 0.0));
+        // Just concatenate output of density network and spherical harmonics basis values
+        vector<float> sphe_basis = computeSphericalHarmonics(theta, phi);
+        for (auto &out_den : out_dens) {
+            out_den.insert(out_den.end(), sphe_basis.begin(), sphe_basis.end());
+        }
+        assert(out_dens[0].size() == 32);
+
 
         // Color network 
-        vector<vector<float>> out_cols = matrix_multiply(matrix_multiply(matrix_multiply(out_sphe, w1_color_, relu), w2_color_, relu), w3_color_, sigmoid); 
+        vector<vector<float>> out_cols = matrix_multiply(matrix_multiply(matrix_multiply(out_dens, w1_color_, relu), w2_color_, relu), w3_color_, sigmoid); 
         colors_.insert(colors_.end(), out_cols.begin(), out_cols.end());
 
         //Compute final color
