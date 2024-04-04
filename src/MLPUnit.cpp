@@ -63,7 +63,7 @@ void MlpUnit::Cycle(){
         this->ClearInputs();
 
     } else {
-        // if MLPUnit doesn't spend 711 cycles, just decrease remain_cycle_.
+        // if MLPUnit didn't spend 711 cycles, just decrease remain_cycle_.
         if (remain_cycle_ > 0){
             remain_cycle_ -= 1;
         }
@@ -116,8 +116,8 @@ void MlpUnit::SetDistance() {
 
 vector<vector<float>> matrix_multiply(const vector<vector<float>>& A, const vector<vector<float>>& B, ActivationFunction activationFunc) {
     int m = A.size();
-    int n = B[0].size();
-    int p = B.size();    
+    int n = B.at(0).size();
+    int p = B.size();
     vector<vector<float>> result(m, vector<float>(n, 0.0));
 
     for (int i = 0; i < m; ++i) {
