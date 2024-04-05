@@ -77,27 +77,27 @@ int main() {
 
     for (int i = 0; i < 200; i++) {
         node.Cycle();
-        cout << i << endl;
-        cout << "start ";
+        // cout << i << endl;
+        // cout << "start ";
         for (auto &elem : node.out_up_pkts) {
-            cout << (unsigned int)elem.ridx << " ";
+            // cout << (unsigned int)elem.ridx << " ";
         }
-        cout << endl;
-        cout << "start ";
+        // cout << endl;
+        // cout << "start ";
         for (auto &elem : node.out_down_pkts) {
-            cout << (unsigned int)elem.ridx << " ";
+            // out << (unsigned int)elem.ridx << " ";
         }
-        cout << endl;
-        cout << "start ";
+        // cout << endl;
+        // cout << "start ";
         for (auto &elem : node.out_left_pkts) {
-            cout << (unsigned int)elem.ridx << " ";
+            // cout << (unsigned int)elem.ridx << " ";
         }
-        cout << endl;
-        cout << "start ";
+        // cout << endl;
+        // cout << "start ";
         for (auto &elem : node.out_right_pkts) {
-            cout << (unsigned int)elem.ridx << " ";
+            // cout << (unsigned int)elem.ridx << " ";
         }
-        cout << endl;
+        // cout << endl;
         acc_out_right_reqs.insert(acc_out_right_reqs.end(), node.out_right_reqs.begin(), node.out_right_reqs.end());
         acc_out_up_pkts.insert(acc_out_up_pkts.end(), node.out_up_pkts.begin(), node.out_up_pkts.end());
         acc_out_down_pkts.insert(acc_out_down_pkts.end(), node.out_down_pkts.begin(), node.out_down_pkts.end());
@@ -111,26 +111,26 @@ int main() {
     sort(acc_out_left_pkts.begin(), acc_out_left_pkts.end());
     sort(acc_out_right_pkts.begin(), acc_out_right_pkts.end());
 
-    cout << "start ";
+    // cout << "start ";
     for (auto &elem : acc_out_up_pkts) {
-        cout << (unsigned int)elem.ridx << " ";
+        // cout << (unsigned int)elem.ridx << " ";
     }
-    cout << endl;
-    cout << "start ";
+    // cout << endl;
+    // cout << "start ";
     for (auto &elem : acc_out_down_pkts) {
-        cout << (unsigned int)elem.ridx << " ";
+        // cout << (unsigned int)elem.ridx << " ";
     }
-    cout << endl;
-    cout << "start ";
+    // cout << endl;
+    // cout << "start ";
     for (auto &elem : acc_out_left_pkts) {
-        cout << (unsigned int)elem.ridx << " ";
+        // cout << (unsigned int)elem.ridx << " ";
     }
-    cout << endl;
-    cout << "start ";
+    // cout << endl;
+    // cout << "start ";
     for (auto &elem : acc_out_right_pkts) {
-        cout << (unsigned int)elem.ridx << " ";
+        // cout << (unsigned int)elem.ridx << " ";
     }
-    cout << endl;
+    // cout << endl;
 
     assert(acc_out_right_reqs == vector<Request>({}));
     assert(acc_out_up_pkts == vector<Packet>({
