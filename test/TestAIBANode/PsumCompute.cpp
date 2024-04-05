@@ -89,18 +89,18 @@ int main() {
     for (int i = 0; i < 8; ++i) {
         node.Cycle();
         // Log start
-        cout << i <<endl;
-        cout << "out_down_sums : ";
+        // cout << i <<endl;
+        // cout << "out_down_sums : ";
         for (auto &elem : node.out_down_sums) {
-            cout << (unsigned int)elem.ridx << " " << (unsigned int)elem.ridx << endl;
+            // cout << (unsigned int)elem.ridx << " " << (unsigned int)elem.ridx << endl;
         }
         // Check AIBANode outputs the psum when cnt == 8
         if (i == 7) {
             assert(!node.out_down_sums.empty());
         }
-        cout << "psum_buffer " << endl;
+        // cout << "psum_buffer " << endl;
         for (auto &elem : node.GetPSumBuffer()) {
-            cout << (unsigned int) elem.cnt << " : " << (float) elem.psum.elem0 << " " << (float) elem.psum.elem1 << endl;
+            // cout << (unsigned int) elem.cnt << " : " << (float) elem.psum.elem0 << " " << (float) elem.psum.elem1 << endl;
             // Check AIBANode correctly add Partial sum
             assert(elem.cnt == i+1);
         }
