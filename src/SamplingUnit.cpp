@@ -35,12 +35,12 @@ void SamplingUnit::Cycle() {
     float t_max_z = fmax((this->min_z - z) / dir_z, (this->max_z - z) / dir_z);
 
     float t_min = fmax(0.0, fmax(t_min_x, fmax(t_min_y, t_min_z)));
-    float t_max = fmax(0.0, fmin(t_max_x, fmin(t_max_y, t_max_z)));
+    float t_max = fmin(t_max_x, fmin(t_max_y, t_max_z));
 
     // Assert fails if the ray does not intersect the bounding box.
     assert(t_min <= t_max);
 
-    float dt = (t_min - t_max) / 256;
+    float dt = (t_max - t_min) / 256;
 
     // Seed the random number generator
     std::random_device rd;
@@ -49,9 +49,6 @@ void SamplingUnit::Cycle() {
 
     Sample empty_sample = { ridx, 0, 0, 0, 0, 0, theta, phi };
     vector<vector<Sample>> out_sample_batches(8, vector<Sample>(32, empty_sample));
-
-    // Generate a random float in the range [0, t]
-    float random_float = dis(gen);
 
     for (int bidx = 0; bidx < 8; bidx++) {
         for (int pidx = 0; pidx < 32; pidx++) {
