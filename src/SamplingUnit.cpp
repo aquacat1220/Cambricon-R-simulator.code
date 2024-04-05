@@ -27,35 +27,15 @@ void SamplingUnit::Cycle() {
     dir_y = sin(theta) * sin(phi);
     dir_z = cos(theta);
 
-    float t_min_x = (this->min_x - x) / dir_x;
-    float t_max_x = (this->max_x - x) / dir_x;
-    float t_min_y = (this->min_y - y) / dir_y;
-    float t_max_y = (this->max_y - y) / dir_y;
-    float t_min_z = (this->min_z - z) / dir_z;
-    float t_max_z = (this->max_z - z) / dir_z;
+    float t_min_x = fmin((this->min_x - x) / dir_x, (this->max_x - x) / dir_x);
+    float t_max_x = fmax((this->min_x - x) / dir_x, (this->max_x - x) / dir_x);
+    float t_min_y = fmin((this->min_y - y) / dir_y, (this->max_y - y) / dir_y);
+    float t_max_y = fmax((this->min_y - y) / dir_y, (this->max_y - y) / dir_y);
+    float t_min_z = fmin((this->min_z - z) / dir_z, (this->max_z - z) / dir_z);
+    float t_max_z = fmax((this->min_z - z) / dir_z, (this->max_z - z) / dir_z);
 
-    if (t_min_x > t_max_x) {
-        float tmp = t_min_x;
-        t_min_x = t_max_x;
-        t_max_x = tmp;
-    }
-
-    if (t_min_y > t_max_y) {
-        float tmp = t_min_y;
-        t_min_y = t_max_y;
-        t_max_y = tmp;
-    }
-
-    if (t_min_z > t_max_z) {
-        float tmp = t_min_z;
-        t_min_z = t_max_z;
-        t_max_z = tmp;
-    }
-
-    float t_min = fmax(t_min_x, fmax(t_min_y, t_min_z));
-    t_min = (t_min < 0) ? 0 : t_min;
-    float t_max = fmin(t_max_x, fmin(t_max_y, t_max_z));
-    t_max = (t_max < 0) ? 0 : t_max;
+    float t_min = fmax(0.0, fmax(t_min_x, fmax(t_min_y, t_min_z)));
+    float t_max = fmax(0.0, fmin(t_max_x, fmin(t_max_y, t_max_z)));
 
     // Assert fails if the ray does not intersect the bounding box.
     assert(t_min <= t_max);
@@ -83,6 +63,7 @@ void SamplingUnit::Cycle() {
             out_sample_batches[bidx][pidx].z = z + dir_z * t;
         }
     }
+    this->out_sample_batches = out_sample_batches;
 
     this->ClearInputs();
     return;

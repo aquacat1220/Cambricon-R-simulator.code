@@ -2,6 +2,7 @@
 #define SAMPLING_UNIT
 
 #include <vector>
+#include <cassert>
 
 #include "CambRCommon.hpp"
 
@@ -24,7 +25,7 @@ class SamplingUnit {
      * @param min_z 
      * @param max_z 
      */
-    SamplingUnit(float min_x, float max_x, float min_y, float max_y, float min_z, float max_z): min_x(min_x), max_x(max_x), min_y(min_y), max_y(max_y), min_z(min_z), max_z(max_z) {}
+    SamplingUnit(float min_x, float max_x, float min_y, float max_y, float min_z, float max_z): min_x(min_x), max_x(max_x), min_y(min_y), max_y(max_y), min_z(min_z), max_z(max_z) { assert(this->min_x <= this->max_x); assert(this->min_y <= this->max_y); assert(this->min_z <= this->max_z);}
 
     public:
     // Inputs
