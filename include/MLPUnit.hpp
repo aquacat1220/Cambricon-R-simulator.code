@@ -111,10 +111,15 @@ class MlpUnit {
 
     public:
     /**
-    * @brief Get a constant reference to remain_cycle_
-    * System uses this function for checking corresponding MLP Unit done current batch computation.
+     * @brief true if MLP unit has output
     */
-    const int& GetRemainCycle();
+    bool has_output;
+
+    /**
+    * @brief Returns true if MLP finished calculation and waiting for input
+    * System uses this function for checking corresponding MLP Unit done batch computation.
+    */
+    bool is_idle();
 
     /**
     * @brief Set distances_ to meaningless distance values b/w two samples for testing.

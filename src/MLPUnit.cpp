@@ -17,6 +17,7 @@ MlpUnit::MlpUnit() {
 }
 
 void MlpUnit::Cycle(){
+    has_output = false;
     if (remain_cycle_ == 0) {
         // MLP computation is started. 711-1=710
         remain_cycle_ = 710;
@@ -66,7 +67,12 @@ void MlpUnit::Cycle(){
         // if MLPUnit didn't spend 711 cycles, just decrease remain_cycle_.
         if (remain_cycle_ > 0){
             remain_cycle_ -= 1;
+            if (remain_cycle_ == 0){
+                has_output = true;
+            }
         }
+        // Panic if it receives input on a non-idle cycle
+        assert(in_features.size() != 0);
     }
 
 }
@@ -105,9 +111,8 @@ Pixel MlpUnit::ComputeColor() {
     return pixel;
 }
 
-const int& MlpUnit::GetRemainCycle() {
-    const auto& ref = this->remain_cycle_;
-    return ref;
+bool MlpUnit::is_idle() {
+    return (this->remain_cycle_ == 0);
 }
 
 void MlpUnit::SetDistance() {
