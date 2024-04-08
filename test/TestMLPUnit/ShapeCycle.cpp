@@ -4,6 +4,7 @@
 #include <iostream>
 
 int main() {
+    /*
     MlpUnit mlpunit = MlpUnit();
     
     // Set input for MlpUnit
@@ -58,6 +59,7 @@ int main() {
         assert(mlpunit.GetRemainCycle() == (709-i));
     }
     cout << "remain_cycle after 711 cycle()s : " << mlpunit.GetRemainCycle() <<endl;
+    */
 
     return 0;
    

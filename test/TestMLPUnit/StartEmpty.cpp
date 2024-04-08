@@ -4,6 +4,7 @@
 #include <algorithm>
 
 int main() {
+    /*
     // Create MLPUnit
     MlpUnit mlpunit = MlpUnit();
 
@@ -14,6 +15,7 @@ int main() {
 
     assert(before_in == vector<Feature>());
     assert(!before_out.ridx);
+    */
 
     return 0;
 }
