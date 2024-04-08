@@ -111,6 +111,10 @@ Pixel MlpUnit::ComputeColor() {
     return pixel;
 }
 
+bool MlpUnit::GetHasOutput() {
+    return this->has_output;
+}
+
 bool MlpUnit::is_idle() {
     return (this->remain_cycle_ == 0);
 }

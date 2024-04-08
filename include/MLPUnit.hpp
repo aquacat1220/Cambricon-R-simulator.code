@@ -90,6 +90,11 @@ class MlpUnit {
     */
     float accumulate_dens_;
 
+    /**
+     * @brief true if MLP unit has output
+    */
+    bool has_output;
+
     private:
     /**
     * @brief Clears all inputs
@@ -111,9 +116,10 @@ class MlpUnit {
 
     public:
     /**
-     * @brief true if MLP unit has output
+     * @brief Return true if the MLP unit has output pixel
+     * System uses this funciton for checking whether the MLP unit has output or not.
     */
-    bool has_output;
+    bool GetHasOutput();
 
     /**
     * @brief Returns true if MLP finished calculation and waiting for input
