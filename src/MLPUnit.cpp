@@ -12,8 +12,9 @@ float sigmoid(float x);
 float elu(float x, float alpha = 1.0f);
 vector<float> computeSphericalHarmonics(float theta, float phi);
 
-MlpUnit::MlpUnit() {
+MlpUnit::MlpUnit(unsigned int ridx_) {
     remain_cycle_ = 0;
+    ridx = ridx_;
 }
 
 void MlpUnit::Cycle(){

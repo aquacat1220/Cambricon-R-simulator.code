@@ -9,7 +9,7 @@ using namespace std;
 
 class MlpUnit {
     public:
-    MlpUnit(void);
+    MlpUnit(unsigned int ridx_);
 
     public:
     // Inputs
