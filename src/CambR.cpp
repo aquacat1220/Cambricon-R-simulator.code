@@ -1,14 +1,93 @@
 #include "CambR.hpp"
 
-CambR::CambR(float min_x, float max_x, float min_y, float max_y, float min_z, float max_z, int min_grid_resolution, int max_grid_resolution) : sam_unit_(min_x, max_x, min_y, max_y, min_z, max_z), enc_unit_(min_grid_resolution, max_grid_resolution) {
-    for (unsigned int i = 0; i < 128; ++i) {
+CambR::CambR(float min_x, float max_x, float min_y, float max_y, float min_z, float max_z,
+ 			int min_grid_resolution, int max_grid_resolution,
+			float* hash_table,
+			vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c) : sam_unit_(min_x, max_x, min_y, max_y, min_z, max_z), enc_unit_(min_grid_resolution, max_grid_resolution) {
+    
+	sam_unit_.in_ray = {rays_.at(0)};
+	states_[0] = SAM_IN_PROG;
+	
+	enc_unit_.HashTableLoad (hash_table);
+
+	for (unsigned int i = 0; i < 128; ++i) {
         MlpUnit tem_mlpunit(i);
+		tem_mlpunit.MlpWeightLoad(w1_d, w2_d, w1_c, w2_c, w3_c);
         mlp_units_.push_back(tem_mlpunit);
     }
 }
 
 void CambR::Cycle() {
+	// execute Cycle() of each unit
+	sam_unit_.Cycle();
+	enc_unit_.Cycle();
+	for (auto &mlp_unit : mlp_units_ ) {
+		mlp_unit.Cycle();
+	}
 
+	// Check sam_unit_ output (0 or 8 batches of samples) and change appropriate element of 'states_' from SAM_IN_PROG -> BEF_ENC
+	if (!sam_unit_.out_sample_batches.empty()) {
+		unsigned int ridx = sam_unit_.out_sample_batches[0][0].ridx;
+		states_[ridx%128] = BEF_ENC;
+		samples_.at(ridx) = sam_unit_.out_sample_batches;
+	}
+
+	// Check enc_unit_ outputs (0 or more batches of features) and change appropriate element of 'states_' from ENC_IN_PROG -> READY.
+	// And of course, store the feature batch in the appropriate element of 'features_'.
+	if (!enc_unit_.out_features.empty()) {
+		for (auto &out_features_same_batch: enc_unit_.out_features) {
+			unsigned int ridx = out_features_same_batch[0].ridx;
+			states_[ridx%128] = READY;
+			features_[ridx%128] = out_features_same_batch;
+		}
+	}
+
+	// Check idle MLP and feed them features from 'features_'.
+	// And change state of 'states_' too.
+	for (int i = 0; i < 128; ++i) {
+		MlpUnit mlp_unit = mlp_units_[i];
+		vector<Feature> in_features = features_[i];
+		unsigned char state = states_[i];
+
+		if (mlp_unit.is_idle() && state == READY) {
+			if (mlp_unit.GetHasOutput()) {
+				out_pixels.push_back(mlp_unit.out_pixel);
+				if (in_features[0].bidx == 0) {
+					mlp_unit.in_features = in_features;
+					features_[i] = {Feature(in_features[0].ridx, 1, 0, {0.0})};
+					states_[i] = BEF_ENC;
+				} else {
+					features_[i] = {Feature(in_features[0].ridx + 1, 0, 0, {0.0})};
+					states_[i] = BEF_SAM;
+				}
+			} else {
+				mlp_unit.in_features = in_features;
+				features_[i] = {Feature(in_features[0].ridx, in_features[0].bidx + 1, 0, {0.0})};
+				if (features_[i][0].bidx == 1) {
+					states_[i] = BEF_SAM;
+				} else {
+					states_[i] = BEF_ENC;
+				}
+			}
+
+		}
+	}
+
+	for (int i = 0; i < 128; ++i) {
+		if (states_[i] == BEF_SAM) {
+			sam_unit_.in_ray = {rays_[features_[i][0].ridx]};
+			states_[i] = SAM_IN_PROG;
+			break;
+		}
+	}
+
+	for (int i = 0; i < 128; ++i) {
+		if (states_[i] == BEF_ENC) {
+			enc_unit_.in_samples = samples_.at(features_[i][0].ridx)[features_[i][0].bidx];
+			states_[i] = ENC_IN_PROG;
+			break;
+		}
+	}
 }
 /*
 ######################################
