@@ -4,7 +4,10 @@ CambR::CambR(float min_x, float max_x, float min_y, float max_y, float min_z, fl
  			int min_grid_resolution, int max_grid_resolution,
 			float* hash_table,
 			vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c) : sam_unit_(min_x, max_x, min_y, max_y, min_z, max_z), enc_unit_(min_grid_resolution, max_grid_resolution) {
-    
+    /*
+	need to load rays_ here
+	*/
+
 	sam_unit_.in_ray = {rays_.at(0)};
 	states_[0] = SAM_IN_PROG;
 	
@@ -58,15 +61,18 @@ void CambR::Cycle() {
 					mlp_unit.in_features = in_features;
 					features_[i] = {Feature(in_features[0].ridx, 1, 0, {0.0})};
 					states_[i] = BEF_ENC;
+					mlp_unit.ridx = in_features[0].ridx;
 				} else {
 					features_[i] = {Feature(in_features[0].ridx + 1, 0, 0, {0.0})};
 					states_[i] = BEF_SAM;
+					mlp_unit.ridx = in_features[0].ridx + 1;
 				}
 			} else {
 				mlp_unit.in_features = in_features;
-				features_[i] = {Feature(in_features[0].ridx, in_features[0].bidx + 1, 0, {0.0})};
-				if (features_[i][0].bidx == 1) {
+				features_[i] = {Feature(in_features[0].ridx, (in_features[0].bidx + 1)%8 , 0, {0.0})};
+				if (features_[i][0].bidx == 0) {
 					states_[i] = BEF_SAM;
+					features_[i][0].ridx += 128;
 				} else {
 					states_[i] = BEF_ENC;
 				}
