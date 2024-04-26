@@ -33,7 +33,6 @@ int main() {
         for (int bidx = 0; bidx < 8; bidx++) {
             for (int pidx = 0; pidx < 32; pidx++) {
                 const Sample& sample = sample_batches[bidx][pidx];
-                printf("x: %.2f y: %.2f z: %.2f\n", sample.x, sample.y, sample.z);
                 assert(0.0 <= sample.x && sample.x <= 100.0);
                 assert(0.0 <= sample.y && sample.y <= 100.0);
                 assert(0.0 <= sample.z && sample.z <= 100.0);
@@ -62,7 +61,6 @@ int main() {
         for (int bidx = 0; bidx < 8; bidx++) {
             for (int pidx = 0; pidx < 32; pidx++) {
                 const Sample& sample = sample_batches[bidx][pidx];
-                printf("x: %.2f y: %.2f z: %.2f\n", sample.x, sample.y, sample.z);
                 assert(0.0 <= sample.x && sample.x <= 100.0);
                 assert(0.0 <= sample.y && sample.y <= 100.0);
                 assert(0.0 <= sample.z && sample.z <= 100.0);
