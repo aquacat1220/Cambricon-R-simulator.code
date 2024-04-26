@@ -31,6 +31,7 @@ class AIBA {
     /**
      * @brief 32 points to process as a single batch.
      * Cleared and refilled for every call to Cycle().
+     * May be empty, if no input is provided for this cycle. In this case, AIBA will only Cycle() its components.
      * 
      */
     vector<Point> in_points;
@@ -39,6 +40,7 @@ class AIBA {
      * @brief Vector of calculated sums from the same batch.
      * AIBA processes multiple batches at the same time, and it is possible that more than two batches finish calculating at the same cycle.
      * Each element in out_sums is a vector of 32 calculated sums coming from the same batch.
+     * May be empty, if there were no batches encoded this cycle.
      * 
      */
     vector<vector<Sum>> out_sums;

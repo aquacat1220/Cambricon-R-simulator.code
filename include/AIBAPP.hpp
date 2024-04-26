@@ -20,7 +20,7 @@ class AIBAPP {
     // Inputs
     /**
      * @brief 32 Points to process as a single batch.
-     * The size of the vector MUST be 32.
+     * The size of the vector MUST be 32 or 0, and if it is 0, AIBAPP will have an empty cycle.
      * Should be correctly set before the call to Cycle().
      * 
      */
@@ -28,7 +28,7 @@ class AIBAPP {
     // Outputs
     /**
      * @brief 256 Requests for the address crossbar to dispatch to AIBA nodes.
-     * As long as the input size is 32, the output size is guaranteed to be 256.
+     * If input size was 32, output size is 256. If input was empty, output is empty too.
      * Cleared and refilled for every call to Cycle().
      * 
      */

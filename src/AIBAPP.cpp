@@ -11,6 +11,11 @@ void AIBAPP::Cycle() {
     // Clear all outputs before generating new ones.
     this->ClearOutputs();
 
+    if (this->in_point_batch.empty()) {
+        this->ClearInputs();
+        return;
+    }
+
     // Iterate over all 32 input points and produce requests.
     for (unsigned char pidx = 0; pidx < 32; pidx++) {
         Point& pt = in_point_batch[pidx];
