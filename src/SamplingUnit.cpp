@@ -27,12 +27,12 @@ void SamplingUnit::Cycle() {
     dir_y = sin(theta) * sin(phi);
     dir_z = cos(theta);
 
-    float t_min_x = fmin((this->min_x - x) / dir_x, (this->max_x - x) / dir_x);
-    float t_max_x = fmax((this->min_x - x) / dir_x, (this->max_x - x) / dir_x);
-    float t_min_y = fmin((this->min_y - y) / dir_y, (this->max_y - y) / dir_y);
-    float t_max_y = fmax((this->min_y - y) / dir_y, (this->max_y - y) / dir_y);
-    float t_min_z = fmin((this->min_z - z) / dir_z, (this->max_z - z) / dir_z);
-    float t_max_z = fmax((this->min_z - z) / dir_z, (this->max_z - z) / dir_z);
+    float t_min_x = fmin((this->min_x_ - x) / dir_x, (this->max_x_ - x) / dir_x);
+    float t_max_x = fmax((this->min_x_ - x) / dir_x, (this->max_x_ - x) / dir_x);
+    float t_min_y = fmin((this->min_y_ - y) / dir_y, (this->max_y_ - y) / dir_y);
+    float t_max_y = fmax((this->min_y_ - y) / dir_y, (this->max_y_ - y) / dir_y);
+    float t_min_z = fmin((this->min_z_ - z) / dir_z, (this->max_z_ - z) / dir_z);
+    float t_max_z = fmax((this->min_z_ - z) / dir_z, (this->max_z_ - z) / dir_z);
 
     float t_min = fmax(0.0, fmax(t_min_x, fmax(t_min_y, t_min_z)));
     float t_max = fmin(t_max_x, fmin(t_max_y, t_max_z));

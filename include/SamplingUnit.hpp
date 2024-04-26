@@ -25,7 +25,7 @@ class SamplingUnit {
      * @param min_z 
      * @param max_z 
      */
-    SamplingUnit(float min_x, float max_x, float min_y, float max_y, float min_z, float max_z): min_x(min_x), max_x(max_x), min_y(min_y), max_y(max_y), min_z(min_z), max_z(max_z) { assert(this->min_x <= this->max_x); assert(this->min_y <= this->max_y); assert(this->min_z <= this->max_z);}
+    SamplingUnit(float min_x, float max_x, float min_y, float max_y, float min_z, float max_z): min_x_(min_x), max_x_(max_x), min_y_(min_y), max_y_(max_y), min_z_(min_z), max_z_(max_z) { assert(this->min_x_ <= this->max_x_); assert(this->min_y_ <= this->max_y_); assert(this->min_z_ <= this->max_z_);}
 
     public:
     // Inputs
@@ -63,7 +63,7 @@ class SamplingUnit {
      * @brief The bounding box of the scene.
      * 
      */
-    float min_x, max_x, min_y, max_y, min_z, max_z;
+    float min_x_, max_x_, min_y_, max_y_, min_z_, max_z_;
 
     private:
     /**
