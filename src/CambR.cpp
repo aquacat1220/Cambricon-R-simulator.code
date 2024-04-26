@@ -33,7 +33,6 @@ void CambR::Cycle() {
 		unsigned int ridx = sam_unit_.out_sample_batches[0][0].ridx;
 		states_[ridx%128] = BEF_ENC;
 		samples_.at(ridx) = sam_unit_.out_sample_batches;
-		sam_unit_.ClearOutputs();
 	}
 
 	// Check enc_unit_ outputs (0 or more batches of features) and change appropriate element of 'states_' from ENC_IN_PROG -> READY.
@@ -44,7 +43,6 @@ void CambR::Cycle() {
 			states_[ridx%128] = READY;
 			features_[ridx%128] = out_features_same_batch;
 		}
-		enc_unit_.ClearOutputs();
 	}
 
 	// Check idle MLP and feed them features from 'features_'.

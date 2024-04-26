@@ -71,8 +71,6 @@ class SamplingUnit {
      * 
      */
     void ClearInputs();
-
-    public:
     /**
      * @brief Clears all outputs.
      * 

@@ -79,12 +79,6 @@ class EncodingUnit {
      */
     unordered_map<pair<unsigned int, unsigned char>, vector<PFeature>, PairHash> pfeature_buffer_; 
 
-    public:
-    /**
-     * @brief Clears all outputs.
-     * 
-     */
-    void ClearOutputs();
 
     private:
     /**
@@ -92,6 +86,11 @@ class EncodingUnit {
      * 
      */
     void ClearInputs();
+    /**
+     * @brief Clears all outputs.
+     * 
+     */
+    void ClearOutputs();
     /**
      * @brief Adds a vector of empty PFeatures to pfeature_buffer under ridx and bidx.
      * 
