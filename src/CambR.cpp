@@ -50,7 +50,7 @@ void CambR::Cycle() {
 	// Check idle MLP and feed them features from 'features_'.
 	// And change state of 'states_' too.
 	for (int i = 0; i < 128; ++i) {
-		MlpUnit mlp_unit = mlp_units_[i];
+		MlpUnit& mlp_unit = mlp_units_[i];
 		vector<Feature> in_features = features_[i];
 		unsigned char state = states_[i];
 
@@ -59,20 +59,42 @@ void CambR::Cycle() {
 				out_pixels.push_back(mlp_unit.out_pixel);
 				if (in_features[0].bidx == 0) {
 					mlp_unit.in_features = in_features;
-					features_[i] = {Feature(in_features[0].ridx, 1, 0, {0.0})};
+					features_[i] = {
+						{
+							.ridx = in_features[0].ridx,
+							.bidx = 1,
+							.pidx = 0,
+							.feature_vector = {0.0}
+						}
+					};
 					states_[i] = BEF_ENC;
 					mlp_unit.ridx = in_features[0].ridx;
 				} else {
-					features_[i] = {Feature(in_features[0].ridx + 1, 0, 0, {0.0})};
+					features_[i] = {
+						{
+							.ridx = in_features[0].ridx + 1,
+							.bidx = 0,
+							.pidx = 0,
+							.feature_vector = {0.0}
+						}
+					};
 					states_[i] = BEF_SAM;
-					mlp_unit.ridx = in_features[0].ridx + 1;
+					// mlp_unit.ridx = in_features[0].ridx + 1;
+					// Above line in probably not needed, because we didn't feed the MLP unit with the batch YET.
+					// When the feature is READY, line 71 will set the `ridx` of `mlp_unit`.
 				}
 			} else {
 				mlp_unit.in_features = in_features;
-				features_[i] = {Feature(in_features[0].ridx, (in_features[0].bidx + 1)%8 , 0, {0.0})};
+				features_[i] = {
+					{
+						.ridx = in_features[0].ridx + (in_features[0].bidx == 7),
+						.bidx = (unsigned char)((in_features[0].bidx + 1) % 8),
+						.pidx = 0,
+						.feature_vector = {0.0}
+					}
+				};
 				if (features_[i][0].bidx == 0) {
 					states_[i] = BEF_SAM;
-					features_[i][0].ridx += 128;
 				} else {
 					states_[i] = BEF_ENC;
 				}

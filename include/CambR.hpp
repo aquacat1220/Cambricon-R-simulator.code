@@ -38,7 +38,7 @@ class CambR {
     */
     void Cycle();
 
-    protected:
+    private:
     /**
      * @brief A sampling unit
     */
@@ -55,7 +55,7 @@ class CambR {
     vector<MlpUnit> mlp_units_;
 
     // For Global buffer
-    protected:
+    private:
     /**
      * @brief A buffer to hold rays requested by the host
      * Hashmap from ray idx to ray
