@@ -32,7 +32,8 @@ class EncodingUnit {
     // Inputs
     /**
      * @brief 32 samples to process as a single batch.
-     * Cleared and refilledfor every call to Cycle().
+     * Cleared and refilled for every call to Cycle().
+     * May be empty, if no input is provided for this cycle. In this case, EncodingUnit will only Cycle() its components.
      * 
      */
     vector<Sample> in_samples;
