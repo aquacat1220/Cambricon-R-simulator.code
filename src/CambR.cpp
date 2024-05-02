@@ -23,6 +23,12 @@ CambR::CambR(float min_x, float max_x, float min_y, float max_y, float min_z, fl
 }
 
 void CambR::Cycle() {
+	this->ClearOutputs();
+
+	for (auto ray : this->in_rays) {
+		this->rays_[ray.ridx] = ray;
+	}
+
 	// execute Cycle() of each unit
 	sam_unit_.Cycle();
 	enc_unit_.Cycle();
@@ -118,6 +124,7 @@ void CambR::Cycle() {
 			break;
 		}
 	}
+	this->ClearInputs();
 }
 /*
 ######################################
@@ -178,3 +185,11 @@ def Cycle():
 
 ##################################################
 */
+
+void CambR::ClearInputs() {
+    this->in_rays.clear();
+}
+
+void CambR::ClearOutputs() {
+    this->out_pixels.clear();
+}
