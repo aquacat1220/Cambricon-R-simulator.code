@@ -60,7 +60,7 @@ void EncodingUnit::Cycle() {
 
 void EncodingUnit::HashTableLoad(HashEntry* hash_table) {
     for (int level = 0; level < 16; level++) {
-        aiba_units_[level].HashTableLoad(hash_table + level * (1 << 20));
+        aiba_units_[level].HashTableLoad(hash_table + level * (1 << 19));
     }
 }
 
