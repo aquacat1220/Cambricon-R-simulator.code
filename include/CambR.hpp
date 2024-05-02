@@ -22,6 +22,7 @@ class CambR {
     public:
     CambR(float min_x, float max_x, float min_y, float max_y, float min_z, float max_z, 
             int min_grid_resolution, int max_grid_resolution,
+            unordered_map<unsigned int, Ray>* rays,
             float* hash_table,
 			vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c);
 
@@ -60,7 +61,7 @@ class CambR {
      * @brief A buffer to hold rays requested by the host
      * Hashmap from ray idx to ray
     */
-    unordered_map<unsigned int, Ray> rays_;
+    unordered_map<unsigned int, Ray>* rays_;
 
     /**
      * @brief A buffer to hold samples, resides in global buffer

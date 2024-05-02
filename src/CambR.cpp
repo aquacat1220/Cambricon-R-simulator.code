@@ -2,13 +2,14 @@
 
 CambR::CambR(float min_x, float max_x, float min_y, float max_y, float min_z, float max_z,
  			int min_grid_resolution, int max_grid_resolution,
+			unordered_map<unsigned int, Ray>* rays,
 			float* hash_table,
-			vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c) : sam_unit_(min_x, max_x, min_y, max_y, min_z, max_z), enc_unit_(min_grid_resolution, max_grid_resolution) {
+			vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c) : sam_unit_(min_x, max_x, min_y, max_y, min_z, max_z), enc_unit_(min_grid_resolution, max_grid_resolution), rays_(rays) {
     /*
 	need to load rays_ here
 	*/
 
-	sam_unit_.in_ray = {rays_.at(0)};
+	sam_unit_.in_ray = {rays_->at(0)};
 	states_[0] = SAM_IN_PROG;
 	
 	enc_unit_.HashTableLoad (hash_table);
@@ -103,7 +104,7 @@ void CambR::Cycle() {
 
 	for (int i = 0; i < 128; ++i) {
 		if (states_[i] == BEF_SAM) {
-			sam_unit_.in_ray = {rays_[features_[i][0].ridx]};
+			sam_unit_.in_ray = {rays_->at(features_[i][0].ridx)};
 			states_[i] = SAM_IN_PROG;
 			break;
 		}
