@@ -58,9 +58,9 @@ void EncodingUnit::Cycle() {
     this->ClearInputs();
 }
 
-void EncodingUnit::HashTableLoad(float* hash_table) {
+void EncodingUnit::HashTableLoad(HashEntry* hash_table) {
     for (int level = 0; level < 16; level++) {
-        aiba_units_[level].HashTableLoad(reinterpret_cast<HashEntry *>(hash_table + level * (1 << 20)));
+        aiba_units_[level].HashTableLoad(hash_table + level * (1 << 20));
     }
 }
 

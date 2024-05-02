@@ -3,7 +3,7 @@
 CambR::CambR(float min_x, float max_x, float min_y, float max_y, float min_z, float max_z,
  			int min_grid_resolution, int max_grid_resolution,
 			unordered_map<unsigned int, Ray>* rays,
-			float* hash_table,
+			HashEntry* hash_table,
 			vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c) : sam_unit_(min_x, max_x, min_y, max_y, min_z, max_z), enc_unit_(min_grid_resolution, max_grid_resolution), rays_(rays) {
     /*
 	need to load rays_ here
@@ -12,7 +12,7 @@ CambR::CambR(float min_x, float max_x, float min_y, float max_y, float min_z, fl
 	sam_unit_.in_ray = {rays_->at(0)};
 	states_[0] = SAM_IN_PROG;
 	
-	enc_unit_.HashTableLoad (hash_table);
+	enc_unit_.HashTableLoad(hash_table);
 
 	for (unsigned int i = 0; i < 128; ++i) {
         MlpUnit tem_mlpunit(i);

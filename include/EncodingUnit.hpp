@@ -60,7 +60,7 @@ class EncodingUnit {
      * @param hash_table Pointer to start of hash table as an array of floats.
      * Array should be of length 16(levels) * 256(nodes) * 2**11(entries) * 2(floats per entry) (= 2**24 floats)
      */
-    void HashTableLoad(float* hash_table);
+    void HashTableLoad(HashEntry* hash_table);
 
     private:
     /**
