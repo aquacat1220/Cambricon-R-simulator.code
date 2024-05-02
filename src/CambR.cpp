@@ -4,7 +4,9 @@ CambR::CambR(float min_x, float max_x, float min_y, float max_y, float min_z, fl
  			int min_grid_resolution, int max_grid_resolution,
 			float* hash_table,
 			vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c) : sam_unit_(min_x, max_x, min_y, max_y, min_z, max_z), enc_unit_(min_grid_resolution, max_grid_resolution) {
-    /*
+    states_.assign(128, BEF_SAM);
+	
+	/*
 	need to load rays_ here
 	*/
 
