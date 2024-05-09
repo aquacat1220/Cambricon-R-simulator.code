@@ -25,6 +25,14 @@ class CambR {
             float* hash_table,
 			vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c);
 
+    // Inputs
+    /**
+     * @brief A vector of input rays.
+     * Cleared and (may be) refilled for every call to Cycle().
+     * May be empty, if no input is provided for this cycle.
+     * 
+     */
+    vector<Ray> in_rays;
     // Outputs
     /**
      * @brief A Vector of final pixels
@@ -81,6 +89,18 @@ class CambR {
      * length 128, one for each MLP unit
     */
     vector<unsigned char> states_;
+
+    private:
+    /**
+     * @brief Clears all inputs.
+     * 
+     */
+    void ClearInputs();
+    /**
+     * @brief Clears all outputs.
+     * 
+     */
+    void ClearOutputs();
 
 };
 
