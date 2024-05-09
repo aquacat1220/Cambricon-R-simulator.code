@@ -69,6 +69,7 @@ void CambR::Cycle() {
 			if (mlp_unit.GetHasOutput()) {
 				out_pixels.push_back(mlp_unit.out_pixel);
 				if (in_features[0].bidx == 0) {
+					samples_.erase(in_features[0].ridx - 128);
 					mlp_unit.in_features = in_features;
 					features_[i] = {
 						{
@@ -81,6 +82,7 @@ void CambR::Cycle() {
 					states_[i] = BEF_ENC;
 					mlp_unit.ridx = in_features[0].ridx;
 				} else {
+					samples_.erase(in_features[0].ridx);
 					features_[i] = {
 						{
 							.ridx = in_features[0].ridx + 128,
@@ -117,6 +119,7 @@ void CambR::Cycle() {
 	for (int i = 0; i < 128; ++i) {
 		if (states_[i] == BEF_SAM) {
 			sam_unit_.in_ray = {rays_[features_[i][0].ridx]};
+			rays_.erase(features_[i][0].ridx);
 			states_[i] = SAM_IN_PROG;
 			break;
 		}
