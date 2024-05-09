@@ -4,15 +4,20 @@ CambR::CambR(float min_x, float max_x, float min_y, float max_y, float min_z, fl
  			int min_grid_resolution, int max_grid_resolution,
 			float* hash_table,
 			vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c) : sam_unit_(min_x, max_x, min_y, max_y, min_z, max_z), enc_unit_(min_grid_resolution, max_grid_resolution) {
-    states_.assign(128, BEF_SAM);
+    
+	states_.assign(128, BEF_SAM);
 	
-	/*
-	need to load rays_ here
-	*/
+	for (unsigned int i=0; i<128; ++i) {
+		features_[i] = {
+			{
+				.ridx = i,
+				.bidx = 0,
+				.pidx = 0,
+				.feature_vector = {0.0}
+			}
+		};
+	}
 
-	sam_unit_.in_ray = {rays_.at(0)};
-	states_[0] = SAM_IN_PROG;
-	
 	enc_unit_.HashTableLoad (hash_table);
 
 	for (unsigned int i = 0; i < 128; ++i) {
