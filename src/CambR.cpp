@@ -100,7 +100,7 @@ void CambR::Cycle() {
 				mlp_unit.in_features = in_features;
 				features_[i] = {
 					{
-						.ridx = in_features[0].ridx + (in_features[0].bidx == 7),
+						.ridx = in_features[0].ridx + 128 * (in_features[0].bidx == 7),
 						.bidx = (unsigned char)((in_features[0].bidx + 1) % 8),
 						.pidx = 0,
 						.feature_vector = {0.0}
