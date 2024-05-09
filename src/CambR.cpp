@@ -83,7 +83,7 @@ void CambR::Cycle() {
 				} else {
 					features_[i] = {
 						{
-							.ridx = in_features[0].ridx + 1,
+							.ridx = in_features[0].ridx + 128,
 							.bidx = 0,
 							.pidx = 0,
 							.feature_vector = {0.0}
