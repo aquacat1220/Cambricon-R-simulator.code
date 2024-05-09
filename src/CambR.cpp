@@ -118,6 +118,9 @@ void CambR::Cycle() {
 
 	for (int i = 0; i < 128; ++i) {
 		if (states_[i] == BEF_SAM) {
+			// If ridx is greater than total # of rays, the requst doesn't progress
+			if (rays_.count(features_[i][0].ridx) <=0) continue; 
+
 			sam_unit_.in_ray = {rays_[features_[i][0].ridx]};
 			rays_.erase(features_[i][0].ridx);
 			states_[i] = SAM_IN_PROG;
