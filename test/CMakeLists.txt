@@ -1,5 +1,3 @@
-include_directories(${PROJECT_SOURCE_DIR}/include/)
-
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cpp)
 list(REMOVE_ITEM sources ${PROJECT_SOURCE_DIR}/src/main.cpp)
 
@@ -22,6 +20,12 @@ foreach(test_source ${test_sources})
 
     get_filename_component(test_source_name ${test_source} NAME_WE)
     add_executable(${test_prefix_noslash}${test_source_name} ${test_source} ${sources})
+
+    target_include_directories(${test_prefix_noslash}${test_source_name} PRIVATE ${PROJECT_SOURCE_DIR}/include/)
+    target_include_directories(${test_prefix_noslash}${test_source_name} PRIVATE ${PROJECT_SOURCE_DIR}/ext/DRAMsim3/src/)
+
+    target_link_libraries(${test_prefix_noslash}${test_source_name} PRIVATE dramsim3)
+
     add_test(
         NAME ${test_prefix}${test_source_name}
         COMMAND $<TARGET_FILE:${test_prefix_noslash}${test_source_name}>

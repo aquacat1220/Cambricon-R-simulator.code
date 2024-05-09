@@ -4,7 +4,7 @@
 
 **This project uses docker and vscode dev containers. Make sure both Docker and vscode is installed locally.**
 
-1. git clone https://github.com/aquacat1220/Cambricon-R-simulator.code.git
+1. git clone --recurse-submodules https://github.com/aquacat1220/Cambricon-R-simulator.code.git
 2. cd Cambricon-R-simulator.code
 3. code .
 4. Install remote development extension (ms-vscode-remote.vscode-remote-extensionpack).

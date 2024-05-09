@@ -1,6 +1,8 @@
 file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
-include_directories(${PROJECT_SOURCE_DIR}/include/)
-include_directories(${PROJECT_SOURCE_DIR}/ext/DRAMsim3/src/)
-
 add_executable(Cambricon-R-simulator ${SOURCES})
+
+target_include_directories(Cambricon-R-simulator PRIVATE ${PROJECT_SOURCE_DIR}/include/)
+target_include_directories(Cambricon-R-simulator PRIVATE ${PROJECT_SOURCE_DIR}/ext/DRAMsim3/src/)
+
+target_link_libraries(Cambricon-R-simulator PRIVATE dramsim3)
