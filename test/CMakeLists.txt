@@ -22,7 +22,6 @@ foreach(test_source ${test_sources})
     add_executable(${test_prefix_noslash}${test_source_name} ${test_source} ${sources})
 
     target_include_directories(${test_prefix_noslash}${test_source_name} PRIVATE ${PROJECT_SOURCE_DIR}/include/)
-    target_include_directories(${test_prefix_noslash}${test_source_name} PRIVATE ${PROJECT_SOURCE_DIR}/ext/DRAMsim3/src/)
 
     target_link_libraries(${test_prefix_noslash}${test_source_name} PRIVATE dramsim3)
 
