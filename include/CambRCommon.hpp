@@ -104,4 +104,10 @@ bool operator==(const Pixel& lhs, const Pixel& rhs);
 
 bool operator<(const Pixel& lhs, const Pixel& rhs);
 
+struct dram_message_t {
+    bool is_write;
+    unsigned long address;
+    // DRAM_FETCH_SIZE = 64 , FP16 = 2
+    float data[64 / 2];
+};
 #endif
