@@ -15,11 +15,12 @@ vector<float> computeSphericalHarmonics(float theta, float phi);
 MlpUnit::MlpUnit(unsigned int ridx_) {
     remain_cycle_ = 0;
     ridx = ridx_;
+    in_features.reserve(32);
 }
 
 void MlpUnit::Cycle(){
     has_output = false;
-    if (remain_cycle_ == 0) {
+    if (remain_cycle_ == 0 && !in_features.empty()) {
         // MLP computation is started. 711-1=710
         remain_cycle_ = 710;
         
@@ -44,7 +45,7 @@ void MlpUnit::Cycle(){
         // Spherical harmonic
         // This part is not compeletly implemented.
         // Just concatenate output of density network and spherical harmonics basis values
-        vector<float> sphe_basis = computeSphericalHarmonics(theta, phi);
+        vector<float> sphe_basis = computeSphericalHarmonics(0.1f, 0.1f); //theta, phi);
         for (auto &out_den : out_dens) {
             out_den.insert(out_den.end(), sphe_basis.begin(), sphe_basis.end());
         }
@@ -55,25 +56,21 @@ void MlpUnit::Cycle(){
         vector<vector<float>> out_cols = matrix_multiply(matrix_multiply(matrix_multiply(out_dens, w1_color_, relu), w2_color_, relu), w3_color_, sigmoid); 
         colors_.insert(colors_.end(), out_cols.begin(), out_cols.end());
 
-        //Compute final color
-        if (exp( - accumulate_dens_ ) >= threshold || in_features[0].bidx == 7) {
-            out_pixel = ComputeColor();
-            this->ClearLocals();
-        } 
-        
-        // Now clear inputs
-        this->ClearInputs();
-
     } else {
         // if MLPUnit didn't spend 711 cycles, just decrease remain_cycle_.
         if (remain_cycle_ > 0){
             remain_cycle_ -= 1;
             if (remain_cycle_ == 0){
-                has_output = true;
+                //Compute final color
+                if (exp( - accumulate_dens_ ) >= threshold || in_features[0].bidx == 7) {
+                    out_pixel = ComputeColor();
+                    this->ClearLocals();
+                    has_output = true;
+                } 
+                // Now clear inputs
+                this->ClearInputs();
             }
         }
-        // Panic if it receives input on a non-idle cycle
-        assert(in_features.size() != 0);
     }
 
 }
@@ -97,7 +94,12 @@ void MlpUnit::ClearLocals() {
 }
 
 Pixel MlpUnit::ComputeColor() {
-    Pixel pixel = {ridx, 0.0, 0.0, 0.0};
+    Pixel pixel = {
+        .ridx = ridx, 
+        .r = 0.0, 
+        .g = 0.0,
+        .b = 0.0
+    };
     float T = 1.0;
     
     for (size_t i = 0; i < colors_.size(); ++i) {
