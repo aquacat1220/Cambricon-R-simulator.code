@@ -45,7 +45,7 @@ void MlpUnit::Cycle(){
         // Spherical harmonic
         // This part is not compeletly implemented.
         // Just concatenate output of density network and spherical harmonics basis values
-        vector<float> sphe_basis = computeSphericalHarmonics(0.1f, 0.1f); //theta, phi);
+        vector<float> sphe_basis = computeSphericalHarmonics(theta, phi);
         for (auto &out_den : out_dens) {
             out_den.insert(out_den.end(), sphe_basis.begin(), sphe_basis.end());
         }
