@@ -71,6 +71,17 @@ class CambR {
     unordered_map<unsigned int, Ray> rays_;
 
     /**
+     * @brief A buffer to hold rays for setting mlp_unit's phi & theta
+     * Hashmap from ray idx to ray
+    */
+    unordered_map<unsigned int, Ray> rays_for_view_;
+
+    /**
+     * @brief count value to initially set phi & theta for each mlp_unit
+    */
+    int initial_view_set_;
+
+    /**
      * @brief A buffer to hold samples, resides in global buffer
      * Hashmap from ray idx to vector of 8 batches of samples
     */

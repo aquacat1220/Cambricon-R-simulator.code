@@ -1,23 +1,33 @@
 #include "CambR.hpp"
+//#include <iostream>
 
 CambR::CambR(float min_x, float max_x, float min_y, float max_y, float min_z, float max_z,
  			int min_grid_resolution, int max_grid_resolution,
 			float* hash_table,
 			vector<vector<float>>& w1_d, vector<vector<float>>& w2_d, vector<vector<float>>& w1_c, vector<vector<float>>& w2_c, vector<vector<float>>& w3_c) : sam_unit_(min_x, max_x, min_y, max_y, min_z, max_z), enc_unit_(min_grid_resolution, max_grid_resolution) {
-    states_.assign(128, BEF_SAM);
-	
-	/*
-	need to load rays_ here
-	*/
+    
+	states_.assign(128, BEF_SAM);
+	features_.reserve(128);
+	initial_view_set_ = 0;
 
-	sam_unit_.in_ray = {rays_.at(0)};
-	states_[0] = SAM_IN_PROG;
-	
+	for (unsigned int i=0; i<128; ++i) {
+		features_[i] = {
+			{
+				.ridx = i,
+				.bidx = 0,
+				.pidx = 0,
+				.feature_vector = {0.0}
+			}
+		};
+	}
+
 	enc_unit_.HashTableLoad (hash_table);
 
 	for (unsigned int i = 0; i < 128; ++i) {
         MlpUnit tem_mlpunit(i);
 		tem_mlpunit.MlpWeightLoad(w1_d, w2_d, w1_c, w2_c, w3_c);
+		tem_mlpunit.threshold = -1e8f;
+		tem_mlpunit.SetDistance();
         mlp_units_.push_back(tem_mlpunit);
     }
 }
@@ -27,6 +37,7 @@ void CambR::Cycle() {
 
 	for (auto ray : this->in_rays) {
 		this->rays_[ray.ridx] = ray;
+		this->rays_for_view_[ray.ridx] = ray;
 	}
 
 	// execute Cycle() of each unit
@@ -40,7 +51,7 @@ void CambR::Cycle() {
 	if (!sam_unit_.out_sample_batches.empty()) {
 		unsigned int ridx = sam_unit_.out_sample_batches[0][0].ridx;
 		states_[ridx%128] = BEF_ENC;
-		samples_.at(ridx) = sam_unit_.out_sample_batches;
+		samples_[ridx] = sam_unit_.out_sample_batches;
 	}
 
 	// Check enc_unit_ outputs (0 or more batches of features) and change appropriate element of 'states_' from ENC_IN_PROG -> READY.
@@ -63,7 +74,10 @@ void CambR::Cycle() {
 		if (mlp_unit.is_idle() && state == READY) {
 			if (mlp_unit.GetHasOutput()) {
 				out_pixels.push_back(mlp_unit.out_pixel);
+				//cout << mlp_unit.ridx << "==" << mlp_unit.out_pixel.ridx << endl;
+				//cout << mlp_unit.phi << mlp_unit.theta << endl;
 				if (in_features[0].bidx == 0) {
+					samples_.erase(in_features[0].ridx - 128);
 					mlp_unit.in_features = in_features;
 					features_[i] = {
 						{
@@ -75,25 +89,39 @@ void CambR::Cycle() {
 					};
 					states_[i] = BEF_ENC;
 					mlp_unit.ridx = in_features[0].ridx;
+					mlp_unit.phi = rays_for_view_[in_features[0].ridx].phi;
+					mlp_unit.theta = rays_for_view_[in_features[0].ridx].theta;
+					rays_for_view_.erase(in_features[0].ridx);
 				} else {
+					samples_.erase(in_features[0].ridx);
 					features_[i] = {
 						{
-							.ridx = in_features[0].ridx + 1,
+							.ridx = in_features[0].ridx + 128,
 							.bidx = 0,
 							.pidx = 0,
 							.feature_vector = {0.0}
 						}
 					};
 					states_[i] = BEF_SAM;
+					mlp_unit.ridx = in_features[0].ridx + 128;
+					mlp_unit.phi = rays_for_view_[in_features[0].ridx+128].phi;
+					mlp_unit.theta = rays_for_view_[in_features[0].ridx+128].theta;
+					rays_for_view_.erase(in_features[0].ridx+128);
 					// mlp_unit.ridx = in_features[0].ridx + 1;
 					// Above line in probably not needed, because we didn't feed the MLP unit with the batch YET.
 					// When the feature is READY, line 71 will set the `ridx` of `mlp_unit`.
 				}
 			} else {
 				mlp_unit.in_features = in_features;
+				if (initial_view_set_ < 128) {
+					mlp_unit.phi = rays_for_view_[in_features[0].ridx].phi;
+					mlp_unit.theta = rays_for_view_[in_features[0].ridx].theta;
+					rays_for_view_.erase(in_features[0].ridx);
+					initial_view_set_++;
+				}
 				features_[i] = {
 					{
-						.ridx = in_features[0].ridx + (in_features[0].bidx == 7),
+						.ridx = in_features[0].ridx + 128 * (in_features[0].bidx == 7),
 						.bidx = (unsigned char)((in_features[0].bidx + 1) % 8),
 						.pidx = 0,
 						.feature_vector = {0.0}
@@ -111,7 +139,11 @@ void CambR::Cycle() {
 
 	for (int i = 0; i < 128; ++i) {
 		if (states_[i] == BEF_SAM) {
+			// If ridx is greater than total # of rays, the requst doesn't progress
+			if (rays_.count(features_[i][0].ridx) <=0) continue; 
+
 			sam_unit_.in_ray = {rays_[features_[i][0].ridx]};
+			rays_.erase(features_[i][0].ridx);
 			states_[i] = SAM_IN_PROG;
 			break;
 		}
