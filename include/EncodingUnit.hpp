@@ -19,6 +19,12 @@ struct PFeature {
     char count;
 };
 
+struct EncodingUnitStats {
+    unsigned int total_cycles;
+    unsigned int idle_cycles;
+    vector<AIBAStats> aiba_statss;
+};
+
 /**
  * @brief Class representing a encoding unit.
  * The encoding unit processes 32 samples per cycle, and produces encoded feature vectors.
@@ -108,6 +114,24 @@ class EncodingUnit {
      * @param out_sums 
      */
     void AccumulteSumsToPFeatureVector(unsigned int ridx, unsigned char bidx, int level, vector<Sum> out_sums);
+
+    private:
+    // Statistics.
+    bool was_idle_ = true;
+    unsigned int total_cycles_ = 0;
+    unsigned int idle_cycles_ = 0;
+
+    public:
+    // Statistics.
+    /**
+     * @brief Returns true is the last call to Cycle() was idle.
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool WasIdle();
+
+    EncodingUnitStats GetStats();
 };
 
 #endif

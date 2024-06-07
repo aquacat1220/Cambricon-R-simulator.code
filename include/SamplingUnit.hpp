@@ -8,6 +8,11 @@
 
 using namespace std;
 
+struct SamplingUnitStats {
+    unsigned int total_cycles;
+    unsigned int idle_cycles;
+};
+
 /**
  * @brief Class representing a sampling unit.
  * Produces samples in batches for each ray, for them to be encoded by the encoding unit.
@@ -76,6 +81,24 @@ class SamplingUnit {
      * 
      */
     void ClearOutputs();
+
+    private:
+    // Statistics.
+    bool was_idle_ = true;
+    unsigned int total_cycles_ = 0;
+    unsigned int idle_cycles_ = 0;
+
+    public:
+    // Statistics.
+    /**
+     * @brief Returns true is the last call to Cycle() was idle.
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool WasIdle();
+
+    SamplingUnitStats GetStats();
 };
 
 

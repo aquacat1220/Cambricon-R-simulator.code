@@ -5,14 +5,21 @@
 #include <random>
 
 void SamplingUnit::Cycle() {
+    // Start with true, and change to false if any actions are observed.
+    this->was_idle_ = true;
+    this->total_cycles_++;
     // Start by clearing previous outputs.
     this->ClearOutputs();
 
     if (this->in_ray.empty()) { // If no ray was supplied to the unit, idle cycle!
         this->ClearInputs(); // Probably unnecessary, but just to be sure.
+        if (this->was_idle_) {
+            this->idle_cycles_++;
+        }
         return;
     }
 
+    this->was_idle_ = false;
     Ray in_ray = this->in_ray[0]; // Otherwise, process the ray.
     unsigned int ridx = in_ray.ridx;
     float x = in_ray.x;
@@ -63,6 +70,9 @@ void SamplingUnit::Cycle() {
     this->out_sample_batches = out_sample_batches;
 
     this->ClearInputs();
+    if (this->was_idle_) {
+        this->idle_cycles_++;
+    }
     return;
 }
 
@@ -72,4 +82,15 @@ void SamplingUnit::ClearInputs() {
 
 void SamplingUnit::ClearOutputs() {
     this->out_sample_batches.clear();
+}
+
+bool SamplingUnit::WasIdle() {
+    return this->was_idle_;
+}
+
+SamplingUnitStats SamplingUnit::GetStats() {
+    return SamplingUnitStats {
+        .total_cycles = total_cycles_,
+        .idle_cycles = idle_cycles_
+    };
 }

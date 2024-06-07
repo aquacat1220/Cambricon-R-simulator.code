@@ -20,12 +20,15 @@ EncodingUnit::EncodingUnit(int min_grid_resolution, int max_grid_resolution) {
 }
 
 void EncodingUnit::Cycle() {
+    this->was_idle_ = true;
+    this->total_cycles_++;
     // Start by clearing previous output.
     this->ClearOutputs();
 
     // Convert Samples to Points. (Remove directional info)
     vector<Point> in_points;
     for (auto &in_sample : this->in_samples) {
+        this->was_idle_ = false;
         in_points.emplace_back(in_sample.ridx, in_sample.bidx, in_sample.pidx, in_sample.x, in_sample.y, in_sample.z);
     }
 
@@ -37,12 +40,14 @@ void EncodingUnit::Cycle() {
     // Cycle every aiba unit.
     for (auto &aiba : this->aiba_units_) {
         aiba.Cycle();
+        this->was_idle_ = this->was_idle_ && aiba.WasIdle();
     }
 
     // Check outputs of every aiba unit, and accumulate into pfeature_buffer_.
     for (int level = 0; level < 16; level++) {
         auto out_sumss = this->aiba_units_[level].out_sums;
         for (auto out_sums : out_sumss) {
+            this->was_idle_ = false;
             unsigned int ridx = out_sums[0].ridx;
             unsigned char bidx = out_sums[0].bidx;
             // If there is no matching entry, create a new one.
@@ -56,6 +61,9 @@ void EncodingUnit::Cycle() {
 
     // Now clear inputs.
     this->ClearInputs();
+    if (this->was_idle_) {
+        this->idle_cycles_++;
+    }
 }
 
 void EncodingUnit::HashTableLoad(float* hash_table) {
@@ -102,4 +110,20 @@ void EncodingUnit::AccumulteSumsToPFeatureVector(unsigned int ridx, unsigned cha
         assert(feature_vec.size() == 32);
         this->out_features.push_back(feature_vec);
     }
+}
+
+bool EncodingUnit::WasIdle() {
+    return this->was_idle_;
+}
+
+EncodingUnitStats EncodingUnit::GetStats() {
+    vector<AIBAStats> aiba_statss;
+    for (auto& aiba: this->aiba_units_) {
+        aiba_statss.push_back(aiba.GetStats());
+    }
+    return EncodingUnitStats {
+        .total_cycles = total_cycles_,
+        .idle_cycles = idle_cycles_,
+        .aiba_statss = aiba_statss
+    };
 }

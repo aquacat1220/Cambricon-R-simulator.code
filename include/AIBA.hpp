@@ -16,6 +16,14 @@ struct PairHash {
         return h1 ^ h2;
     }
 };
+
+struct AIBAStats {
+    unsigned int total_cycles;
+    unsigned int idle_cycles;
+    AIBAPPStats aiba_pp_stats;
+    vector<AIBANodeStats> aiba_node_statss;
+};
+
 /**
  * @brief Class representing a single AIBA unit.
  * Each AIBA unit is responsible for a single level of multiresolution hash table
@@ -116,6 +124,23 @@ class AIBA {
      * @param ridx The request index to check for.
      */
     void CheckSumBuffer(unsigned int ridx, unsigned char bidx);
+
+    private:
+    // Statistics.
+    bool was_idle_ = true;
+    unsigned int total_cycles_ = 0;
+    unsigned int idle_cycles_ = 0;
+
+    public:
+    // Statistics.
+    /**
+     * @brief Returns true is the last call to Cycle() was idle.
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool WasIdle();
+    AIBAStats GetStats();
 };
 
 #endif

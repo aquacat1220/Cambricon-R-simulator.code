@@ -5,11 +5,14 @@ AIBANode::AIBANode(unsigned char coord) {
 }
 
 void AIBANode::Cycle(void) {
+    this->was_idle_ = true;
+    this->total_cycles++;
     // Clear all outputs before generating new ones.
     this->ClearOutputs();
 
     // Whether the vertex address belongs to the current node's sram bank.
     for(vector<Request>::iterator itr = in_left_reqs.begin(); itr!=in_left_reqs.end(); ++itr){
+        this->was_idle_ = false;
         if(coord_ == static_cast<unsigned char>((itr->addr >> 11) & 0xFF)){
             // Store the Request in LRB 
             local_request_buffer_.push_back(*itr);
@@ -20,6 +23,7 @@ void AIBANode::Cycle(void) {
     }
 
     if(!local_request_buffer_.empty()) {
+        this->was_idle_ = false;
         // SRAM bank access
         Request req = *local_request_buffer_.begin();
         local_request_buffer_.erase(local_request_buffer_.begin());
@@ -49,10 +53,12 @@ void AIBANode::Cycle(void) {
     this->Routing(in_right_pkts);
 
     // Transfer input sums from up node to down node.
+    if (in_up_sums.empty()) { this->was_idle_ = false; }
     out_down_sums.insert(out_down_sums.end(), in_up_sums.begin(), in_up_sums.end());
 
     // Iterate over arrive packets and accumulate into psum_buffer.
     for (const Packet &pkt : arrival_buffer_) {
+        this->was_idle_ = false;
         unsigned int first = 0;
         // First check for preexisting matching psums.
         for (PSum &psum : psum_buffer_) {
@@ -79,7 +85,9 @@ void AIBANode::Cycle(void) {
     arrival_buffer_.clear();
 
     this->ClearInputs();
-
+    if (this->was_idle_) {
+        this->idle_cycles++;
+    }
     return;
 }
 
@@ -113,6 +121,7 @@ void AIBANode::Routing(vector<Packet> &pkt_buffer){
 }
 
 void AIBANode::Routing_pkt(Packet pkt){
+    this->was_idle_ = false;
     unsigned char my_row = this->coord_ >> 4;
     unsigned char my_col = this->coord_ & 0xF;
     unsigned char target_row = pkt.dest >> 4;
@@ -141,4 +150,12 @@ const vector<HashEntry>& AIBANode::GetSramBank() {
 const vector<PSum>& AIBANode::GetPSumBuffer() {
     const auto& ref = this->psum_buffer_;
     return ref;
+}
+
+bool AIBANode::WasIdle() {
+    return this->was_idle_;
+}
+
+AIBANodeStats AIBANode::GetStats() {
+    return AIBANodeStats { .total_cycles = total_cycles, .idle_cycles = idle_cycles };
 }

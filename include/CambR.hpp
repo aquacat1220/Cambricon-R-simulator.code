@@ -14,6 +14,15 @@
 #define BEF_ENC 2
 #define ENC_IN_PROG 3
 #define READY 4
+
+struct CambRStats {
+    unsigned int total_cycles;
+    unsigned int idle_cycles;
+    SamplingUnitStats sampling_unit_stats;
+    EncodingUnitStats encoding_unit_stats;
+    vector<MlpUnitStats> mlp_unit_statss;
+};
+
 /**
  * @brief Class representing a cambricon-r accelerator.
  * 
@@ -113,6 +122,23 @@ class CambR {
      */
     void ClearOutputs();
 
+    private:
+    // Statistics.
+    bool was_idle_ = true;
+    unsigned int total_cycles_ = 0;
+    unsigned int idle_cycles_ = 0;
+
+    public:
+    // Statistics.
+    /**
+     * @brief Returns true is the last call to Cycle() was idle.
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool WasIdle();
+
+    CambRStats GetStats();
 };
 
 #endif

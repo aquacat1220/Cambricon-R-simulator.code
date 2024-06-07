@@ -19,11 +19,14 @@ MlpUnit::MlpUnit(unsigned int ridx_) {
 }
 
 void MlpUnit::Cycle(){
+    this->was_idle_ = true;
+    this->total_cycles_++;
     has_output = false;
     if (remain_cycle_ == 0 && !in_features.empty()) {
+        this->was_idle_ = false;
         // MLP computation is started. 711-1=710
         remain_cycle_ = 710;
-        
+
         // Convert input feature to matrix form
         vector<vector<float>> in_feature_matrix;
         for (auto &in_feature : in_features) {
@@ -59,6 +62,7 @@ void MlpUnit::Cycle(){
     } else {
         // if MLPUnit didn't spend 711 cycles, just decrease remain_cycle_.
         if (remain_cycle_ > 0){
+            this->was_idle_ = false;
             remain_cycle_ -= 1;
             if (remain_cycle_ == 0){
                 //Compute final color
@@ -71,6 +75,9 @@ void MlpUnit::Cycle(){
                 this->ClearInputs();
             }
         }
+    }
+    if (this->was_idle_) {
+        this->idle_cycles_++;
     }
 
 }
@@ -172,4 +179,15 @@ vector<float> computeSphericalHarmonics(float theta, float phi) {
     }
 
     return Y;
+}
+
+bool MlpUnit::WasIdle() {
+    return this->was_idle_;
+}
+
+MlpUnitStats MlpUnit::GetStats() {
+    return MlpUnitStats {
+        .total_cycles = total_cycles_,
+        .idle_cycles = idle_cycles_
+    };
 }

@@ -33,18 +33,24 @@ CambR::CambR(float min_x, float max_x, float min_y, float max_y, float min_z, fl
 }
 
 void CambR::Cycle() {
+	this->was_idle_ = true;
+	this->total_cycles_++;
 	this->ClearOutputs();
 
 	for (auto ray : this->in_rays) {
+		this->was_idle_ = false;
 		this->rays_[ray.ridx] = ray;
 		this->rays_for_view_[ray.ridx] = ray;
 	}
 
 	// execute Cycle() of each unit
 	sam_unit_.Cycle();
+	this->was_idle_ = this->was_idle_ && sam_unit_.WasIdle();
 	enc_unit_.Cycle();
+	this->was_idle_ = this->was_idle_ && enc_unit_.WasIdle();
 	for (auto &mlp_unit : mlp_units_ ) {
 		mlp_unit.Cycle();
+		this->was_idle_ = this->was_idle_ && mlp_unit.WasIdle();
 	}
 
 	// Check sam_unit_ output (0 or 8 batches of samples) and change appropriate element of 'states_' from SAM_IN_PROG -> BEF_ENC
@@ -157,6 +163,13 @@ void CambR::Cycle() {
 		}
 	}
 	this->ClearInputs();
+	if (this->was_idle_) {
+		this->idle_cycles_++;
+	}
+}
+
+bool CambR::WasIdle() {
+	return this->was_idle_;
 }
 /*
 ######################################
@@ -224,4 +237,20 @@ void CambR::ClearInputs() {
 
 void CambR::ClearOutputs() {
     this->out_pixels.clear();
+}
+
+CambRStats CambR::GetStats() {
+	SamplingUnitStats sampling_unit_stats = this->sam_unit_.GetStats();
+	EncodingUnitStats encoding_unit_stats = this->enc_unit_.GetStats();
+	vector<MlpUnitStats> mlp_unit_statss;
+	for (auto& mlp_unit : this->mlp_units_) {
+		mlp_unit_statss.push_back(mlp_unit.GetStats());
+	}
+	return CambRStats {
+		.total_cycles = total_cycles_,
+		.idle_cycles = idle_cycles_,
+		.sampling_unit_stats = sampling_unit_stats,
+		.encoding_unit_stats = encoding_unit_stats,
+		.mlp_unit_statss = mlp_unit_statss
+	};
 }

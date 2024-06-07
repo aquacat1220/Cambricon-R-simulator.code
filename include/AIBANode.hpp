@@ -6,6 +6,11 @@
 #include "AIBACommon.hpp"
 
 using namespace std;
+
+struct AIBANodeStats {
+    unsigned int total_cycles;
+    unsigned int idle_cycles;
+};
 /**
  * @brief Class representing a single AIBA node.
  * 
@@ -89,7 +94,29 @@ class AIBANode {
      * 
      * @warning Should only be used for testing purposes.
      */
-    const vector<PSum>& GetPSumBuffer(); 
+    const vector<PSum>& GetPSumBuffer();
+
+    private:
+    // Statistics.
+    bool was_idle_ = true;
+    unsigned int total_cycles = 0;
+    unsigned int idle_cycles = 0;
+
+    public:
+    // Statistics.
+    /**
+     * @brief Returns true is the last call to Cycle() was idle.
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool WasIdle();
+    /**
+     * @brief Get statistics.
+     * 
+     * @return AIBANodeStats
+     */
+    AIBANodeStats GetStats();
 };
 
 #endif

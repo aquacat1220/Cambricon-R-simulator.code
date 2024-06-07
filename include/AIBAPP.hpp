@@ -7,6 +7,11 @@
 
 using namespace std;
 
+struct AIBAPPStats {
+    unsigned int total_cycles;
+    unsigned int idle_cycles;
+};
+
 /**
  * @brief Class representing an AIBA preprocessing unit.
  * AIBAPP takes 32 point input batches and produce 256 requests for AIBANode.
@@ -90,6 +95,23 @@ class AIBAPP {
      * @return Size 8 vector of calculated weights, in the order of 000, 001, 010, 011, 100, 101, 110, 111.
      */
     static vector<float> TriLerp(float offx, float offy, float offz);
+
+    private:
+    // Statistics.
+    bool was_idle_ = true;
+    unsigned int total_cycles_ = 0;
+    unsigned int idle_cycles_ = 0;
+
+    public:
+    // Statistics.
+    /**
+     * @brief Returns true is the last call to Cycle() was idle.
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool WasIdle();
+    AIBAPPStats GetStats();
 };
 
 #endif

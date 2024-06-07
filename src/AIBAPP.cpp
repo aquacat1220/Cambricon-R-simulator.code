@@ -8,14 +8,20 @@ AIBAPP::AIBAPP(int grid_resolution) {
 }
 
 void AIBAPP::Cycle() {
+    this->was_idle_ = true;
+    this->total_cycles_++;
     // Clear all outputs before generating new ones.
     this->ClearOutputs();
 
     if (this->in_point_batch.empty()) {
         this->ClearInputs();
+        if (this->was_idle_) {
+            this->idle_cycles_++;
+        }
         return;
     }
 
+    this->was_idle_ = false;
     // Iterate over all 32 input points and produce requests.
     for (unsigned char pidx = 0; pidx < 32; pidx++) {
         Point& pt = in_point_batch[pidx];
@@ -43,6 +49,9 @@ void AIBAPP::Cycle() {
     
     // Clear all inputs before returning.
     this->ClearInputs();
+    if (this->was_idle_) {
+        this->idle_cycles_++;
+    }
     return;
 }
 
@@ -66,4 +75,12 @@ vector<float> AIBAPP::TriLerp(float offx, float offy, float offz) {
         return_vec.push_back(abs((grid_offx - offx) * (grid_offy - offy) * (grid_offz - offz)));
     }
     return return_vec;
+}
+
+bool AIBAPP::WasIdle() {
+    return this->was_idle_;
+}
+
+AIBAPPStats AIBAPP::GetStats() {
+    return AIBAPPStats { .total_cycles = total_cycles_, .idle_cycles = idle_cycles_ };
 }

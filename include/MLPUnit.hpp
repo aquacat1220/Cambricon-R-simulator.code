@@ -7,6 +7,11 @@
 
 using namespace std;
 
+struct MlpUnitStats {
+    unsigned int total_cycles;
+    unsigned int idle_cycles;
+};
+
 class MlpUnit {
     public:
     MlpUnit(unsigned int ridx_);
@@ -135,6 +140,24 @@ class MlpUnit {
     * @warning Should only be used for testing purposes.
     */
     void SetDistance();
+    
+    private:
+    // Statistics.
+    bool was_idle_ = true;
+    unsigned int total_cycles_ = 0;
+    unsigned int idle_cycles_ = 0;
+
+    public:
+    // Statistics.
+    /**
+     * @brief Returns true is the last call to Cycle() was idle.
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool WasIdle();
+
+    MlpUnitStats GetStats();
 };
 
 #endif

@@ -15,18 +15,25 @@ AIBA::AIBA(int grid_resolution) : AIBAPP_(grid_resolution) {
 }
 
 void AIBA::Cycle(){
+    this->was_idle_ = true;
+    this->total_cycles_++;
     ClearOutputs();
     // Preprocessing by AIBAPP
     AIBAPP_.in_point_batch = in_points;
     AIBAPP_.Cycle();
+    this->was_idle_ = this->was_idle_ &&  AIBAPP_.WasIdle();
 
     // 16x16 AIBANode mesh Cycle()
     for (AIBANode &aibanode : AIBANodes_) {
         aibanode.Cycle();
+        this->was_idle_ = this->was_idle_ &&  AIBAPP_.WasIdle();
     }
 
     this->Transition();
     ClearInputs();
+    if (this->was_idle_) {
+        this->idle_cycles_++;
+    }
 }
 
 void AIBA::HashTableLoad(HashEntry* hash_table) {
@@ -133,4 +140,22 @@ void AIBA::CheckSumBuffer(unsigned int ridx, unsigned char bidx) {
     this->out_sums.push_back(sum_vec);
     this->sum_buffer_.erase(make_pair(ridx, bidx));
     return;
+}
+
+bool AIBA::WasIdle() {
+    return this->was_idle_;
+}
+
+AIBAStats AIBA::GetStats() {
+    AIBAPPStats aiba_pp_stats = this->AIBAPP_.GetStats();
+    vector<AIBANodeStats> aiba_node_statss;
+    for (auto& node : this->AIBANodes_) {
+        aiba_node_statss.push_back(node.GetStats());
+    }
+    return AIBAStats {
+        .total_cycles = total_cycles_,
+        .idle_cycles = idle_cycles_,
+        .aiba_pp_stats = aiba_pp_stats,
+        .aiba_node_statss = aiba_node_statss
+    };
 }
